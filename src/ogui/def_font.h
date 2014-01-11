@@ -1,5 +1,5 @@
 /***************************************************************************
-Copyright (c) 2013, Amir Geva
+Copyright (c) 2013-2014, Amir Geva
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
