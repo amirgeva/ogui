@@ -1,6 +1,6 @@
 ogui
 ====
-Off-screen rendered platform independent user interface library
+Off-screen rendered platform independent user interface library.
 
 Basically, it's a widget rendering and interaction library that renders everything on
 an off-screen bitmap, so that it's fully independent.
