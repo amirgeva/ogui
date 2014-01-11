@@ -189,10 +189,10 @@ struct imemstream: virtual membuf, public std::istream {
   }
 };
 
-void OGUIManager::initialize_desktop()
+void OGUIManager::initialize_desktop(int width, int height)
 {
   m_Desktop = Widget::create();
-  m_Desktop->set_rect(Rect(0, 0, MLG::get_screen_width(), MLG::get_screen_height()));
+  m_Desktop->set_rect(Rect(0, 0, width, height));
 }
 
 widget_ptr OGUIManager::get_desktop()

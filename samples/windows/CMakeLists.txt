@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+include_directories(../../include)
+add_definitions( "/wd4005 /wd4996 /nologo" )
+add_executable(windows WIN32 stdafx.cpp wmain.cpp wmain.rc wmain.ico)
+target_link_libraries(windows image ogui)

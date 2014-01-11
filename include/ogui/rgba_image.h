@@ -51,10 +51,25 @@ class Image
   typedef std::shared_ptr<buffer_type> buffer_ptr;
 
   buffer_ptr m_Data;
+  byte*      m_ExternalData;
   unsigned   m_Width;
   unsigned   m_Height;
 
-  bool prepare_copy(const Image& src, Rect& src_rect, Rect& dst_rect, const Point& dst_pt=Point(0,0));
+  byte* get_image_buffer()
+  {
+    if (m_ExternalData) return m_ExternalData;
+    buffer_type& v = *m_Data;
+    return &v[0];
+  }
+
+  const byte* get_image_buffer() const
+  {
+    if (m_ExternalData) return m_ExternalData;
+    const buffer_type& v = *m_Data;
+    return &v[0];
+  }
+
+  bool prepare_copy(const Image& src, Rect& src_rect, Rect& dst_rect, const Point& dst_pt = Point(0, 0));
 
   void initialize(unsigned width, unsigned height)
   {
@@ -64,30 +79,51 @@ class Image
   }
   bool load_png(std::istream& is);
 public:
-  Image() : m_Width(0), m_Height(0) {}
+  Image() : m_Width(0), m_Height(0), m_ExternalData(0) {}
 
   Image(unsigned width, unsigned height)
+    : m_ExternalData(0)
   {
     initialize(width,height);
   }
 
   Image(const Point& size)
+    : m_ExternalData(0)
   {
     initialize(size.x,size.y);
   }
 
-  Image(const std::string& png_path) { load_png(std::ifstream(png_path.c_str(),std::ios::in|std::ios::binary)); }
-  Image(std::istream& png_is) { load_png(png_is); }
+  Image(unsigned width, unsigned height, byte* external)
+    : m_ExternalData(external)
+    , m_Width(width)
+    , m_Height(height)
+  {}
+
+  Image(const std::string& png_path) 
+    : m_ExternalData(0)
+  {
+    load_png(std::ifstream(png_path.c_str(), std::ios::in | std::ios::binary));
+  }
+
+  Image(std::istream& png_is) 
+    : m_ExternalData(0)
+  {
+    load_png(png_is);
+  }
+
   Image(const Image& image)
   : m_Data(image.m_Data)
+  , m_ExternalData(image.m_ExternalData)
   , m_Width(image.m_Width)
   , m_Height(image.m_Height)
   {}
+
   ~Image(){}
   Image& operator= (const Image& image)
   {
     if (&image == this) return *this;
     m_Data=image.m_Data;
+    m_ExternalData = image.m_ExternalData;
     m_Width=image.m_Width;
     m_Height=image.m_Height;
     return *this;
@@ -106,14 +142,14 @@ public:
   byte* get_row(unsigned y)
   {
     unsigned index=y*m_Width*4;
-    buffer_type& buffer=*m_Data;
+    byte* buffer = get_image_buffer();
     return &buffer[index];
   }
 
   const byte* get_row(unsigned y) const
   {
     unsigned index=y*m_Width*4;
-    const buffer_type& buffer=*m_Data;
+    const byte* buffer = get_image_buffer();
     return &buffer[index];
   }
 

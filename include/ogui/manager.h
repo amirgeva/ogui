@@ -51,6 +51,9 @@ public:
     static std::unique_ptr<OGUIManager> ptr(new OGUIManager);
     return ptr.get();
   }
+
+  void        initialize_desktop(int width, int height);
+
   font_ptr    get_default_font() { return m_Font; }
   void        set_default_font(font_ptr font) { m_Font=font; }
   unsigned    get_skin_color(SkinColors which);
@@ -87,14 +90,12 @@ private:
   OGUIManager()
     : m_MouseCapture(0)
   {
-    initialize_desktop();
     load_default_skin();
   }
   ~OGUIManager() {}
   OGUIManager(const OGUIManager&) {}
   OGUIManager& operator= (const OGUIManager&) { return *this; }
 
-  void initialize_desktop();
   void load_default_skin();
 
   typedef std::list<skin_colors> colors_stack;
