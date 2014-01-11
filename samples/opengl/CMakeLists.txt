@@ -3,4 +3,6 @@ include_directories(../../include)
 add_definitions( "/wd4005 /wd4996 /nologo" )
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/lib)
 add_executable(opengl main.cpp)
-target_link_libraries(opengl image ogui glew32s freeglut_static)
+target_link_libraries(opengl image ogui 
+  debug glew32s_d freeglut_static_d
+  optimized glew32s freeglut_static)
