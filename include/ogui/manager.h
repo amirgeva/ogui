@@ -63,7 +63,11 @@ public:
   void               push_color_state();
   void               pop_color_state();
 
-  void        load_skin(const xstring& skin_file) { load_skin(std::ifstream(skin_file)); }
+  void        load_skin(const xstring& skin_file) 
+  {
+    std::ifstream f(skin_file);
+    load_skin(f); 
+  }
   void        load_skin(std::istream& skin_is);
 
   bool        add_listener(const xstring& listener_name, const xstring& target_name, const xstring& event_type, event_callback callback);

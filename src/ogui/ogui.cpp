@@ -202,7 +202,8 @@ widget_ptr OGUIManager::get_desktop()
 
 void OGUIManager::load_default_skin()
 {
-  Image font_image(imemstream(default_font,sizeof(default_font)));
+  imemstream ms(default_font,sizeof(default_font));
+  Image font_image(ms);
   int size=font_image.get_width()/10;
   m_Font=font_ptr(new Font(font_image,' ',size));
 

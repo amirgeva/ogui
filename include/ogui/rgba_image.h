@@ -102,7 +102,8 @@ public:
   Image(const std::string& png_path) 
     : m_ExternalData(0)
   {
-    load_png(std::ifstream(png_path.c_str(), std::ios::in | std::ios::binary));
+    std::ifstream f(png_path.c_str(), std::ios::in | std::ios::binary);
+    load_png(f);
   }
 
   Image(std::istream& png_is) 

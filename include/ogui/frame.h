@@ -67,7 +67,7 @@ public:
     target.fill(get_skin_color(SKIN_COLOR_DEFAULT_FILL));
     float w2=m_Width*0.5f;
     int w=target.get_width(),h=target.get_height();
-    byte color[] = { (m_Color>>16)&0xFF, (m_Color>> 8)&0xFF, (m_Color    )&0xFF };
+    byte color[] = { byte((m_Color>>16)&0xFF), byte((m_Color>> 8)&0xFF), byte((m_Color)&0xFF) };
     for(int p=0;p<m_Width;++p)
     {
       float ratio=sqrt(1.0f-fabs((p-w2)/m_Width));

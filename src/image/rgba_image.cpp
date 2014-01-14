@@ -64,7 +64,8 @@ struct struct_cleaner
 
 bool Image::load_from_file(const char* path)
 {
-  return load_png(std::ifstream(path,std::ios::in|std::ios::binary));
+  std::ifstream f(path,std::ios::in|std::ios::binary);
+  return load_png(f);
 }
 
 bool Image::save_to_file(const char* path)

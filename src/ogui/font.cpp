@@ -99,7 +99,7 @@ public:
 };
 
 
-void Font::draw(Image& target, Point& offset, const xstring& text, unsigned color) const
+void Font::draw(Image& target, const Point& offset, const xstring& text, unsigned color) const
 {
   placement_vec placement;
   unsigned w=create_placement(text,placement);

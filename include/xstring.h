@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <sstream>
 #include <vector>
-#include <allocators>
+//#include <allocators>
 #include <algorithm>
 #include <unordered_map>
 
@@ -90,19 +90,19 @@ public:
   
   self& to_lower()
   {
-    std::transform(begin(), end(), begin(), tolower);
+    std::transform(parent::begin(), parent::end(), parent::begin(), tolower);
     return *this;
   }
 
   self& to_upper()
   {
-    std::transform(begin(),end(),begin(),toupper);
+    std::transform(parent::begin(),parent::end(),parent::begin(),toupper);
     return *this;
   }
 
   int as_int() const
   {
-    if (empty()) return 0;
+    if (parent::empty()) return 0;
     try
     {
       if (begins_with("-"))
@@ -117,7 +117,7 @@ public:
 
   double as_double() const
   {
-    if (empty()) return 0;
+    if (parent::empty()) return 0;
     return std::stod(parent::c_str());
   }
 
@@ -145,15 +145,15 @@ public:
   bool begins_with(const self& s) const
   {
     unsigned n=s.length();
-    if (n>length()) return false;
-    return std::equal(begin(),begin()+n,s.begin());
+    if (n>parent::length()) return false;
+    return std::equal(parent::begin(),parent::begin()+n,s.begin());
   }
 
   bool ends_with(const self& s) const
   {
     unsigned n=s.length();
-    if (n>length()) return false;
-    return std::equal(begin()+(length()-n),end(),s.begin());
+    if (n>parent::length()) return false;
+    return std::equal(parent::begin()+(parent::length()-n),parent::end(),s.begin());
   }
 
   bool read_line(std::istream& is)
@@ -187,9 +187,9 @@ public:
   {
     std::basic_ostringstream<E,T,A> os;
     os << u;
-    int p=find("{}");
+    int p=parent::find("{}");
     if (p>=0)
-      replace(p,2,os.str());
+      parent::replace(p,2,os.str());
     return *this;
   }
 
@@ -235,14 +235,16 @@ public:
 typedef basic_xstring<char> xstring;
 typedef basic_string_tokenizer<char> xstring_tokenizer;
 
-template<> struct std::hash<xstring>
+namespace std {
+template<> struct hash<xstring>
 {
   size_t operator()(const xstring& s) const
   {
-    std::hash<std::string> h;
+    hash<string> h;
     return h(s);
   }
 };
+} // namespace std
 
 inline void make_lower(xstring& s)
 {

@@ -2,6 +2,7 @@
 #include <vector>
 #include <glew.h>
 #include <glut.h>
+#include <string.h>
 #include <ogui/ogui.h>
 
 using namespace OGUI;

@@ -53,7 +53,7 @@ namespace OGUI {
     { 
       build_rects(); 
     }
-    void draw(Image& target, Point& offset, const xstring& text, unsigned color) const;
+    void draw(Image& target, const Point& offset, const xstring& text, unsigned color) const;
     Rect get_bounds(const xstring& text) const;
     int  get_tile_size() const { return m_TileSize; }
   };

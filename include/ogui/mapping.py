@@ -42,6 +42,7 @@ def fill_attrs(all,parents,name):
 widget_class=(""
 "class {CLASS}Generator : public TWidgetGenerator<{CLASS}>\n"
 "{\n"
+"  typedef TWidgetGenerator<{CLASS}> super;\n"
 "public:\n"
 "  static pointer parse(xml_element_ptr el)\n"
 "  {\n"
@@ -56,7 +57,8 @@ widget_class=(""
 "  }\n"
 "};\n")
 
-cond='      if (name=="{ATTR}") set_value(widget,&{CLASS}::set_{ATTR},value);\n'
+condw='      if (name=="{ATTR}") super::set_value(widget,&{CLASS}::set_{ATTR},value);\n'
+cond='      if (name=="{ATTR}") widget->set_{ATTR}(parse_{TYPE}(value));\n'
 
 
 creator_func=(''
@@ -76,7 +78,11 @@ def process(all,parents):
 				for a in attrs:
 					attr_name=a[0]
 					attr_name=attr_name[4:]
-					cond_line=cond.replace('{ATTR}',attr_name)
+					attr_type=a[1]
+					cond_line=condw
+					if attr_type!='widget_ptr':
+						cond_line=cond.replace('{TYPE}',attr_type)
+					cond_line=cond_line.replace('{ATTR}',attr_name)
 					cond_line=cond_line.replace('{CLASS}',name)
 					out.write(cond_line)
 			else:

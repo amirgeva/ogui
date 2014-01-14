@@ -25,6 +25,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***************************************************************************/
 #include <zstreams.h>
 #include <fstream>
+#include <list>
 #include <xstring.h>
 #include <prims.h>
 #include "zlib.h"

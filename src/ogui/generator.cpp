@@ -109,6 +109,17 @@ void parse_xml_value(const xstring& xml_value, bool& value)
   value = (xml_value == "true");
 }
 
+Orientation parse_Orientation(const xstring& value) { Orientation v; parse_xml_value(value,v); return v; }
+Point parse_Point(const xstring& value) { Point v; parse_xml_value(value,v); return v; }
+int parse_int(const xstring& value) { int v; parse_xml_value(value,v); return v; }
+float parse_float(const xstring& value) { float v; parse_xml_value(value,v); return v; }
+unsigned parse_unsigned(const xstring& value) { unsigned v; parse_xml_value(value,v); return v; }
+bool parse_bool(const xstring& value) { bool v; parse_xml_value(value,v); return v; }
+Alignment parse_Alignment(const xstring& value) { Alignment v; parse_xml_value(value,v); return v; }
+xstring parse_xstring(const xstring& value) { xstring v; parse_xml_value(value,v); return v; }
+Rect parse_Rect(const xstring& value) { Rect v; parse_xml_value(value,v); return v; }
+
+
 Widget* get_root_widget(widget_ptr ptr)
 {
   Widget* w = ptr->get_parent();
