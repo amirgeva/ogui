@@ -44,7 +44,7 @@ void render()
 
   float w = float(glutGet(GLUT_WINDOW_WIDTH));
   float h = float(glutGet(GLUT_WINDOW_HEIGHT));
-  glViewport(0, 0, w, h);
+  glViewport(0, 0, GLsizei(w), GLsizei(h));
 
   if (!initialized)
   {
@@ -66,7 +66,7 @@ void render()
   if (OGUIManager::instance()->get_desktop()->draw(g_Image, g_Image.get_rect()))
   {
     g_Image.save_to_file("d:\\tmp\\image.png");
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, g_Image.get_row(0));
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(w), GLsizei(h), GL_RGBA, GL_UNSIGNED_BYTE, g_Image.get_row(0));
   }
   glUniform1i(txtr_loc, 0);
 
