@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ogui/ogui.h>
-#include "SDL.h"
+#include <SDL2/SDL.h>
 
 using namespace OGUI;
 
