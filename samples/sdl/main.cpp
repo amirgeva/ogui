@@ -1,7 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <ogui/ogui.h>
+#ifdef _MSC_VER
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 
 using namespace OGUI;
 
