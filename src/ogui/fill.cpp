@@ -31,10 +31,11 @@ void FillWidget::redraw()
 {
   Image& target=get_redraw_target();
   byte color[4];
-  color[0]=(m_Color>>16)&0xFF;
-  color[1]=(m_Color>> 8)&0xFF;
-  color[2]=(m_Color    )&0xFF;
-  Rect rect=get_rect();
+  color[0] = (m_Color >> 16) & 0xFF;
+  color[1] = (m_Color >>  8) & 0xFF;
+  color[2] = (m_Color      ) & 0xFF;
+  color[3] = (m_Color >> 24) & 0xFF;
+  Rect rect = get_rect();
   fPoint pos(0,0);
   float dy=1.0f/rect.get_height();
   float dx=1.0f/rect.get_width();
@@ -52,7 +53,7 @@ void FillWidget::redraw()
     {
       for(int i=0;i<3;++i)
         row[x*4+i]=byte(color[i]*(grad.left+grad.get_width()*pos.x)*(grad.top+grad.get_height()*pos.y));
-      row[x*4+3]=255;
+      row[x*4+3]=color[3];
     }
   }
 }
