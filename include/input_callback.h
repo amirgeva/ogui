@@ -29,6 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class InputCallback
 {
 public:
+  enum SpecialKeys {
+    F1=224, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,
+    LEFT, UP, RIGHT, DOWN, PAGE_UP, PAGE_DOWN,
+    HOME, END, INSERT
+  };
+
   virtual ~InputCallback() {}
   virtual void on_keyboard(unsigned char key) = 0;
   virtual void mouse_down(int button, int x, int y) = 0;
