@@ -34,11 +34,12 @@ namespace OGUI {
 
 class ImageWidget : public StaticWidget
 {
-  std::shared_ptr<Image> m_Image;
+  image_ptr m_Image;
 public:
   OGUI_DECLARE_WIDGET(ImageWidget);
 
-  virtual void  set_image(const xstring& image_path) { invalidate(); m_Image=ImageCache::instance()->load(image_path); }
+  virtual void  set_image(const xstring& image_path) { m_Image = ImageCache::instance()->load(image_path); invalidate(); }
+  virtual void  attach_image(image_ptr image) { m_Image = image; invalidate(); }
   virtual Point get_minimum_size() const override{ return m_Image->get_size(); }
   virtual Point get_layout_preference() const override{ return Point(LAYOUT_TIGHT,LAYOUT_TIGHT); }
   virtual void redraw() override
