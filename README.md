@@ -2,7 +2,9 @@ ogui
 ====
 Off-screen rendered platform independent user interface library.
 
-Basically, it's a widget rendering and interaction library that is detached from
+[Quickstart](https://github.com/amirgeva/ogui/wiki/Getting-Started)
+
+OGUI is a widget rendering and interaction library that is detached from
 any system dependent resources.  The widgets are rendered on an off-screen bitmap, 
 and hooks are in place to receive input device events.
 After rendering, the UI bitmap can be either blitted to a 2D display, or copied to 
