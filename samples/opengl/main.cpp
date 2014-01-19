@@ -65,7 +65,6 @@ void render()
   glBindTexture(GL_TEXTURE_2D, g_Texture);
   if (OGUIManager::instance()->get_desktop()->draw(g_Image, g_Image.get_rect()))
   {
-    g_Image.save_to_file("d:\\tmp\\image.png");
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, GLsizei(w), GLsizei(h), GL_RGBA, GL_UNSIGNED_BYTE, g_Image.get_row(0));
   }
   glUniform1i(txtr_loc, 0);
