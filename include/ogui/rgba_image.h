@@ -120,6 +120,7 @@ public:
   {}
 
   ~Image(){}
+
   Image& operator= (const Image& image)
   {
     if (&image == this) return *this;
@@ -184,9 +185,10 @@ public:
   void blend_constant(const Image& src, Rect src_rect=Rect(), const Point& dst_pt=Point(), float src_alpha=1.0f, float dst_alpha=0.0f);
 };
 
-
 void filter(Image& image, const Rect& rect, const float* coef);
 void draw_button(Image& target, const Rect& rect, bool sunk, unsigned bg_color, unsigned hilight, unsigned lolight);
+
+typedef std::shared_ptr<Image> image_ptr;
 
 } // namespace OGUI
 
