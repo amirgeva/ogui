@@ -69,18 +69,20 @@ class PushButtonWidget : public ButtonWidget
 public:
   OGUI_DECLARE_WIDGET(PushButtonWidget);
 
-  virtual void on_mouse_down(int button, const Point& pos) override
+  virtual bool on_mouse_down(int button, const Point& pos) override
   {
     set_pressed(true);
     ButtonWidget::on_mouse_down(button,pos);
     OGUIManager::instance()->capture_mouse(this);
+    return true;
   }
 
-  virtual void on_mouse_up(int button, const Point& pos) override
+  virtual bool on_mouse_up(int button, const Point& pos) override
   {
     set_pressed(false);
     if (get_rect().point_inside(pos + get_rect().top_left()))
       raise_event("clicked");
+    return true;
   }
 };
 
@@ -129,14 +131,15 @@ public:
     }
   }
 
-  virtual void on_mouse_down(int button, const Point& pos) override
+  virtual bool on_mouse_down(int button, const Point& pos) override
   {
     set_pressed(true);
     ButtonWidget::on_mouse_down(button, pos);
     OGUIManager::instance()->capture_mouse(this);
+    return true;
   }
 
-  virtual void on_mouse_up(int button, const Point& pos) override
+  virtual bool on_mouse_up(int button, const Point& pos) override
   {
     if (get_rect().point_inside(pos+get_rect().top_left()))
     {
@@ -144,6 +147,7 @@ public:
       set_button_down(new_state);
     }
     set_pressed(m_ButtonDown);
+    return true;
   }
 };
 

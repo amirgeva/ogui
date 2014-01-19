@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 #include <prims.h>
+#include <xstring.h>
 
 namespace OGUI {
 
@@ -49,6 +50,14 @@ struct TPoint
   self& operator-= (const self& o) { x-=o.x; y-=o.y; return *this; }
   self  operator-  () const        { return self(-x,-y); }
   self& operator*= (T s)           { x*=s; y*=s; return *this; }
+
+  self& parse(const xstring& s)
+  {
+    xstring_tokenizer st(s, ",");
+    x = T(st.get_next_token().as_double());
+    y = T(st.get_next_token().as_double());
+    return *this;
+  }
 
   float magnitude() const { return float(sqrt(x*x+y*y)); }
 };
@@ -210,6 +219,18 @@ typedef TRect<int>   Rect;
 typedef TRect<float> fRect;
 
 }; // namespace OGUI
+
+namespace std {
+  template<> struct hash<OGUI::Point>
+  {
+    size_t operator()(const OGUI::Point& p) const
+    {
+      size_t h = unsigned(p.y);
+      return (h << 16 | unsigned(p.x));
+    }
+  };
+} // namespace std
+
 
 #endif // H_MATH_2D
 

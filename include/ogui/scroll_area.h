@@ -101,24 +101,24 @@ public:
     return res;
   }
 
-  virtual void on_mouse_down(int button, const Point& pos) override
+  virtual bool on_mouse_down(int button, const Point& pos) override
   {
-    super::on_mouse_down(button,pos+m_ScrollPosition);
+    return super::on_mouse_down(button,pos+m_ScrollPosition);
   }
 
-  virtual void on_mouse_up(int button, const Point& pos) override
+  virtual bool on_mouse_up(int button, const Point& pos) override
   {
-    super::on_mouse_up(button,pos+m_ScrollPosition);
+    return super::on_mouse_up(button, pos + m_ScrollPosition);
   }
 
-  virtual void on_mouse_move(const Point& pos) override
+  virtual bool on_mouse_move(const Point& pos) override
   {
-    super::on_mouse_move(pos+m_ScrollPosition);
+    return super::on_mouse_move(pos + m_ScrollPosition);
   }
 
-  virtual void on_mouse_drag(const Point& pos) override
+  virtual bool on_mouse_drag(const Point& pos) override
   {
-    super::on_mouse_drag(pos+m_ScrollPosition);
+    return super::on_mouse_drag(pos + m_ScrollPosition);
   }
 };
 

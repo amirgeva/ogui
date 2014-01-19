@@ -110,6 +110,7 @@ private:
   widget_ptr            m_Desktop;
   font_ptr              m_Font;
   Widget*               m_MouseCapture;
+  widget_ptr            m_LastCursorLeafWidget;
   widget_ptr            m_ModalWidget;
 
   struct listener

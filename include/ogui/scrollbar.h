@@ -49,9 +49,9 @@ public:
   virtual Point get_minimum_size() const override { return Point(16,16); }
   virtual Point get_layout_preference() const override { return Point(LAYOUT_TIGHT,LAYOUT_TIGHT); }
 
-  virtual void on_mouse_down(int button, const Point& pos) override;
-  virtual void on_mouse_up(int button, const Point& pos) override;
-  virtual void on_mouse_drag(const Point& pos) override;
+  virtual bool on_mouse_down(int button, const Point& pos) override;
+  virtual bool on_mouse_up(int button, const Point& pos) override;
+  virtual bool on_mouse_drag(const Point& pos) override;
 };
 
 typedef std::shared_ptr<ScrollButtonWidget> scroll_button_widget_ptr;
@@ -150,23 +150,23 @@ public:
 
 };
 
-inline void ScrollButtonWidget::on_mouse_down(int button, const Point& pos)
+inline bool ScrollButtonWidget::on_mouse_down(int button, const Point& pos)
 {
   m_DownPosition=pos+get_rect().top_left();
   m_DownRect=get_rect();
-  super::on_mouse_down(button,pos);
+  return super::on_mouse_down(button,pos);
 }
 
-inline void ScrollButtonWidget::on_mouse_up(int button, const Point& pos)
+inline bool ScrollButtonWidget::on_mouse_up(int button, const Point& pos)
 {
   Rect rect=get_rect();
   int rpos=(m_Orientation==ORIENTATION_VERTICAL)?rect.top:rect.left;
   float ratio=float(rpos)/m_Scrollbar->get_movement_range();
   m_Scrollbar->set_position(ratio);
-  super::on_mouse_up(button, pos);
+  return super::on_mouse_up(button, pos);
 }
 
-inline void ScrollButtonWidget::on_mouse_drag(const Point& pos)
+inline bool ScrollButtonWidget::on_mouse_drag(const Point& pos)
 {
   Point pofs=(pos+get_rect().top_left())-m_DownPosition;
   bool vert=(m_Orientation==ORIENTATION_VERTICAL);
@@ -192,6 +192,7 @@ inline void ScrollButtonWidget::on_mouse_drag(const Point& pos)
   }
   set_rect(rect);
   m_Scrollbar->update_position(float(new_pos)/range);
+  return true;
 }
 
 

@@ -160,6 +160,8 @@ namespace OGUI {
       }
     }
 
+    virtual widget_ptr       find_leaf_widget(const Point& pos);
+
     virtual Point            get_minimum_size() const;
     virtual float            get_layout_weight() const { return m_LayoutWeight; }
     virtual void             set_layout_weight(const float& weight) { INVALIDATING_ASSIGN(m_LayoutWeight,weight); }
@@ -172,7 +174,7 @@ namespace OGUI {
     virtual Alignment        get_alignment() const { return m_Alignment; }
     virtual void             set_alignment(const Alignment& a) { INVALIDATING_ASSIGN(m_Alignment, a); }
 
-    virtual void             set_parent(Widget* p) { m_Parent=p; }
+    virtual void             set_parent(Widget* p);
 
     virtual void             enable(bool state=true) { INVALIDATING_ASSIGN(m_Enabled,state); }
     virtual void             disable() { enable(false); }
@@ -231,13 +233,13 @@ namespace OGUI {
     */
     virtual bool             draw(Image& target, const Rect& region);
 
-    virtual void             on_mouse_down(int button, const Point& pos);
-    virtual void             on_mouse_up(int button, const Point& pos);
-    virtual void             on_mouse_move(const Point& pos) {}
-    virtual void             on_mouse_drag(const Point& pos) {}
-    virtual void             on_mouse_enter(const Point& pos) {}
-    virtual void             on_mouse_leave(const Point& pos) {}
-    virtual void             on_char(unsigned short ch) {}
+    virtual bool             on_mouse_down(int button, const Point& pos);
+    virtual bool             on_mouse_up(int button, const Point& pos);
+    virtual bool             on_mouse_move(const Point& pos);
+    virtual bool             on_mouse_drag(const Point& pos);
+    virtual bool             on_mouse_enter(const Point& pos);
+    virtual bool             on_mouse_leave(const Point& pos);
+    virtual bool             on_char(unsigned short ch) { return false; }
 
     virtual bool             add_listener(const xstring& receiver, const xstring& event_type, event_callback cb)
     {

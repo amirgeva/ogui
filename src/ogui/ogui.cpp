@@ -61,7 +61,30 @@ bool Widget::draw(Image& target, const Rect& region)
   return rc;
 }
 
-void Widget::on_mouse_down(int button, const Point& pos) 
+void Widget::set_parent(Widget* p)
+{
+  m_Parent = p;
+}
+
+
+widget_ptr Widget::find_leaf_widget(const Point& pos)
+{
+  for (auto it = m_Children.rbegin(); it != m_Children.rend(); ++it)
+  {
+    auto& c = *it;
+    if (!c->enabled()) continue;
+    const Rect& r = c->get_rect();
+    if (r.point_inside(pos))
+    {
+      widget_ptr res = c->find_leaf_widget(pos - r.top_left());
+      if (!res) return c;
+      return    res;
+    }
+  }
+  return widget_ptr();
+}
+
+bool Widget::on_mouse_down(int button, const Point& pos) 
 {
   bool child_found = false;
   for(auto it=m_Children.rbegin();it!=m_Children.rend();++it)
@@ -72,22 +95,54 @@ void Widget::on_mouse_down(int button, const Point& pos)
     if (r.point_inside(pos))
     {
       child_found = true;
-      c->on_mouse_down(button, pos - r.top_left());
-      break;
+      if (c->on_mouse_down(button, pos - r.top_left())) return true;
     }
   }
-  if (!child_found) OGUIManager::instance()->capture_mouse(this);
+  if (!child_found)
+  {
+    OGUIManager::instance()->capture_mouse(this);
+    raise_event("mouse_down",S(pos));
+    return true;
+  }
+  return false;
 }
 
-void Widget::on_mouse_up(int button, const Point& pos)
+bool Widget::on_mouse_up(int button, const Point& pos)
 {
   Rect r = get_rect();
   r.move_to(Point(0, 0));
   if (r.point_inside(pos))
   {
     raise_event("clicked");
+    return true;
   }
+  return false;
 }
+
+bool Widget::on_mouse_move(const Point& pos)
+{
+  raise_event("mouse_move", S(pos));
+  return true;
+}
+
+bool Widget::on_mouse_drag(const Point& pos)
+{
+  raise_event("mouse_drag", S(pos));
+  return true;
+}
+
+bool Widget::on_mouse_enter(const Point& pos)
+{
+  raise_event("mouse_enter", S(pos));
+  return true;
+}
+
+bool Widget::on_mouse_leave(const Point& pos)
+{
+  raise_event("mouse_leave", S(pos));
+  return true;
+}
+
 
 
 
@@ -242,6 +297,7 @@ void OGUIManager::load_skin(std::istream& skin_is)
 
 void OGUIManager::clear()
 {
+  m_LastCursorLeafWidget = widget_ptr();
   m_Listeners.clear();
   get_desktop()->clear_children();
 }
@@ -279,8 +335,25 @@ void OGUIManager::mouse_move(int x, int y)
   else
   {
     widget_ptr& w = get_event_recipient();
-    Point p = w->from_desktop(Point(x, y));
-    w->on_mouse_move(p);
+    Point global_pos(x, y);
+    Point p = w->from_desktop(global_pos);
+    widget_ptr leaf=w->find_leaf_widget(p);
+    if (leaf)
+    {
+      p = leaf->from_desktop(global_pos);
+      if (leaf != m_LastCursorLeafWidget)
+      {
+        if (m_LastCursorLeafWidget) m_LastCursorLeafWidget->on_mouse_leave(m_LastCursorLeafWidget->from_desktop(global_pos));
+        leaf->on_mouse_enter(p);
+        m_LastCursorLeafWidget = leaf;
+      }
+      else
+      {
+        leaf->on_mouse_move(p);
+      }
+    }
+    else
+      w->on_mouse_move(p);
   }
 }
 
