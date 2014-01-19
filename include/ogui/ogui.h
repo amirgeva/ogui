@@ -44,6 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ogui/scrollbar.h>
 #include <ogui/table.h>
 #include <ogui/modal.h>
+#include <ogui/generator.h>
 
 #endif // H_OFFSCREEN_GUI
 

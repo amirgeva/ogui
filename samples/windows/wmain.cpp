@@ -134,12 +134,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    rect.bottom = 480;
    InvalidateRect(hWnd, &rect, TRUE);
    OGUI::OGUIManager::instance()->initialize_desktop(640, 480);
-   OGUI::widget_ptr button = OGUI::TextPushButtonWidget::create("Push Me");
-   button->set_rect(OGUI::Rect(200, 200, 440, 280));
-   OGUI::OGUIManager::instance()->get_desktop()->add_child(button);
-   OGUI::widget_ptr label = OGUI::TextWidget::create("This sample shows integration into a win32 app");
-   label->set_rect(OGUI::Rect(10, 10, 630, 100));
-   OGUI::OGUIManager::instance()->get_desktop()->add_child(label);
+
+   void load_demo_layout();
+   load_demo_layout();
 
    SetTimer(hWnd, 555, 50, 0);
    return TRUE;

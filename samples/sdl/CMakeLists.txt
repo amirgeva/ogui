@@ -18,4 +18,4 @@ add_definitions("-std=c++11")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 add_executable(sdl main.cpp)
-target_link_libraries(sdl image ogui SDL2 SDL2main)
+target_link_libraries(sdl image ogui demo SDL2 SDL2main)

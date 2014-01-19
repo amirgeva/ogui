@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 2.8)
+
+include_directories(../../include)
+IF (MSVC)
+add_definitions( "/wd4005 /wd4996 /nologo" )
+ENDIF(MSVC)
+IF(CMAKE_COMPILER_IS_GNUCXX)
+add_definitions("-std=c++11")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+add_definitions("-DROOTDIR=\"${CMAKE_SOURCE_DIR}\"")
+add_library(demo mainmenu.cpp table.cpp imagemap.cpp buttons.cpp)

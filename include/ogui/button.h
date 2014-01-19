@@ -155,6 +155,11 @@ typedef std::shared_ptr<ToggleButtonWidget> toggle_button_widget_ptr;
 
 class CheckboxWidget : public ToggleButtonWidget
 {
+protected:
+  CheckboxWidget()
+  {
+    set_layout_preference(Point(LAYOUT_TIGHT, LAYOUT_TIGHT));
+  }
 public:
   OGUI_DECLARE_WIDGET(CheckboxWidget);
 

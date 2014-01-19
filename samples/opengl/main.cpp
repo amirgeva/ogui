@@ -94,9 +94,9 @@ bool init()
 
   OGUIManager::instance()->initialize_desktop(w, h);
   g_Image = Image(w, h);
-  widget_ptr button = TextPushButtonWidget::create("Push Me");
-  button->set_rect(Rect(200, 200, 440, 280));
-  OGUIManager::instance()->get_desktop()->add_child(button);
+
+  void load_demo_layout();
+  load_demo_layout();
 
   float ar = float(w) / h;
   glGenTextures(1, &g_Texture);
@@ -195,17 +195,17 @@ static void idle_action()
 
 int main( int argc, char **argv )
 {
-    glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
-    glutInitWindowSize( 640, 480 );
-    glutCreateWindow( "OpenGL Sample" );
-    glutDisplayFunc(render);
-    glutMouseFunc(mouse_click);
-    glutMotionFunc(mouse_drag);
-    glutIdleFunc(idle_action);
-    glewInit();
+  glutInit(&argc,argv);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+  glutInitWindowSize( 640, 480 );
+  glutCreateWindow( "OpenGL Sample" );
+  glutDisplayFunc(render);
+  glutMouseFunc(mouse_click);
+  glutMotionFunc(mouse_drag);
+  glutIdleFunc(idle_action);
+  glewInit();
 
-    glutMainLoop();
-    deinit();
-    return 0;
+  glutMainLoop();
+  deinit();
+  return 0;
 }

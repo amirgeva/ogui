@@ -27,13 +27,9 @@ bool init()
   OGUIManager::instance()->initialize_desktop(WIDTH, HEIGHT);
   g_Image = Image(WIDTH, HEIGHT);
 
-  {
-    // These lines are the layout loading part.  Complex GUI has a more complex set of these lines
-    OGUIManager::instance()->clear();
-    widget_ptr button = TextPushButtonWidget::create("Push Me");
-    button->set_rect(Rect(200, 200, 440, 280));
-    OGUIManager::instance()->get_desktop()->add_child(button);
-  }
+  void load_demo_layout();
+  load_demo_layout();
+
   return true;
 }
 

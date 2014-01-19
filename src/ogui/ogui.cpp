@@ -26,11 +26,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "stdafx.h"
 #include "def_font.h"
 
-namespace MLG {
-  int get_screen_width();
-  int get_screen_height();
-}
-
 namespace OGUI {
 
 xstring Widget::generate_unique_name()

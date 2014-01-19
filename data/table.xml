@@ -1,0 +1,15 @@
+<FrameWidget rect="0,0,640,480" SKIN_COLOR_DEFAULT_FILL="0xFFDD8844">
+    <TableWidget name="table"
+                 column_count="4"
+                 header_bg_color="0xFF88CCFF"
+                 header_color="0xFF222222"
+                 column_names="Item,Price,Qty,X"
+                 column_weights="3,3,2,1"
+    />
+    <StaticWidget layout="VerticalLayout" layout_preference="100,EXPAND" layout_margin="5,20" layout_spacing="50,50">
+        <TextPushButtonWidget name="buy" text="Buy" layout_preference="80,30"/>
+        <TextPushButtonWidget name="sell" text="Sell" layout_preference="80,30"/>
+        <TextPushButtonWidget name="back" text="Back" layout_preference="80,30"/>
+        <TextWidget name="result" text=" " layout_preference="80,30"/>
+    </StaticWidget>
+</FrameWidget>
