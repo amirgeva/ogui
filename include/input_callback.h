@@ -35,12 +35,18 @@ public:
     HOME, END, INSERT
   };
 
+  enum MouseButtons
+  {
+    BUTTON_LEFT, BUTTON_MIDDLE, BUTTON_RIGHT, BUTTON_SCROLLUP, BUTTON_SCROLLDOWN
+  };
+
   virtual ~InputCallback() {}
   virtual void on_keyboard(unsigned char key) = 0;
   virtual void mouse_down(int button, int x, int y) = 0;
   virtual void mouse_up(int button, int x, int y) = 0;
   virtual void mouse_move(int x, int y) = 0;
   virtual void mouse_drag(int x, int y) = 0;
+  virtual void mouse_scroll(int direction) { }
 };
 
 
