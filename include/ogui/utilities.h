@@ -62,6 +62,14 @@ struct Color
     return *this;
   }
 
+  Color& mix(const Color& rhs)
+  {
+    r = byte((unsigned(r) + unsigned(rhs.r)) / 2);
+    g = byte((unsigned(g) + unsigned(rhs.g)) / 2);
+    b = byte((unsigned(b) + unsigned(rhs.b)) / 2);
+    return *this;
+  }
+
   unsigned compose() const
   {
     return (unsigned(a)<<24) | (unsigned(b)<<16) | (unsigned(g)<<8) | unsigned(r);
