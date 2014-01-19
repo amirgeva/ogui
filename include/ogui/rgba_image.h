@@ -54,6 +54,9 @@ class Image
   byte*      m_ExternalData;
   unsigned   m_Width;
   unsigned   m_Height;
+  bool       m_Modified;
+
+  bool  owned_data() const { return !m_ExternalData; }
 
   byte* get_image_buffer()
   {
@@ -79,35 +82,45 @@ class Image
   }
   bool load_png(std::istream& is);
 public:
-  Image() : m_Width(0), m_Height(0), m_ExternalData(0) {}
+  Image() 
+  : m_Width(0)
+  , m_Height(0)
+  , m_ExternalData(0)
+  , m_Modified(false) 
+  {}
 
   Image(unsigned width, unsigned height)
-    : m_ExternalData(0)
+  : m_ExternalData(0)
+  , m_Modified(false)
   {
     initialize(width,height);
   }
 
   Image(const Point& size)
-    : m_ExternalData(0)
+  : m_ExternalData(0)
+  , m_Modified(false)
   {
     initialize(size.x,size.y);
   }
 
   Image(unsigned width, unsigned height, byte* external)
-    : m_ExternalData(external)
-    , m_Width(width)
-    , m_Height(height)
+  : m_ExternalData(external)
+  , m_Width(width)
+  , m_Height(height)
+  , m_Modified(false)
   {}
 
   Image(const std::string& png_path) 
-    : m_ExternalData(0)
+  : m_ExternalData(0)
+  , m_Modified(false)
   {
     std::ifstream f(png_path.c_str(), std::ios::in | std::ios::binary);
     load_png(f);
   }
 
   Image(std::istream& png_is) 
-    : m_ExternalData(0)
+  : m_ExternalData(0)
+  , m_Modified(false)
   {
     load_png(png_is);
   }
@@ -117,6 +130,7 @@ public:
   , m_ExternalData(image.m_ExternalData)
   , m_Width(image.m_Width)
   , m_Height(image.m_Height)
+  , m_Modified(image.m_Modified)
   {}
 
   ~Image(){}
@@ -128,6 +142,7 @@ public:
     m_ExternalData = image.m_ExternalData;
     m_Width=image.m_Width;
     m_Height=image.m_Height;
+    m_Modified = image.m_Modified;
     return *this;
   }
 
@@ -143,6 +158,13 @@ public:
 
   byte* get_row(unsigned y)
   {
+    // Split owned pixel buffer, if shared
+    if (owned_data() && !m_Data.unique())
+    {
+      buffer_ptr p = m_Data;
+      m_Data = buffer_ptr(new buffer_type(*p));
+    }
+    m_Modified = true;
     unsigned index=y*m_Width*4;
     byte* buffer = get_image_buffer();
     return &buffer[index];
@@ -176,6 +198,9 @@ public:
       }
     }
   }
+
+  bool is_modified() const { return m_Modified; }
+  void reset_modified()    { m_Modified = false; }
 
   void fill(Rect rect, unsigned color);
   void fill(unsigned color) { fill(get_rect(),color); }
