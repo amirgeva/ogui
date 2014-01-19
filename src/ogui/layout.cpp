@@ -142,7 +142,7 @@ void HorizontalLayout::arrange(Widget* widget)
 
 Point HorizontalLayout::get_minimum_size(const Widget* widget) const
 {
-  Point res=2*widget->get_layout_margin();
+  Point res(0, 0);
   int n = 0;
   for(auto& w : *widget)
   {
@@ -152,6 +152,7 @@ Point HorizontalLayout::get_minimum_size(const Widget* widget) const
     ++n;
   }
   res.x += (n - 1)*(widget->get_layout_spacing()).x;
+  res += 2 * widget->get_layout_margin();
   return res;
 }
 
@@ -218,7 +219,7 @@ void VerticalLayout::arrange(Widget* widget)
 
 Point VerticalLayout::get_minimum_size(const Widget* widget) const
 {
-  Point res=2*widget->get_layout_margin();
+  Point res(0, 0);
   int n = 0;
   for (auto& w : *widget)
   {
@@ -228,6 +229,7 @@ Point VerticalLayout::get_minimum_size(const Widget* widget) const
     ++n;
   }
   res.y += (n - 1)*widget->get_layout_spacing().y;
+  res += 2 * widget->get_layout_margin();
   return res;
 }
 
