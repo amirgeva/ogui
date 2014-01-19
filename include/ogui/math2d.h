@@ -31,8 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
-template<class T> inline T sqr(T t)      { return t*t;  }
-
 template<class T>
 struct TPoint
 {
