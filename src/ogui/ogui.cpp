@@ -113,7 +113,7 @@ bool Widget::on_mouse_up(int button, const Point& pos)
   r.move_to(Point(0, 0));
   if (r.point_inside(pos))
   {
-    raise_event("clicked");
+    raise_event("clicked",S(pos));
     return true;
   }
   return false;
