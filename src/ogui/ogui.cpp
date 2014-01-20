@@ -367,6 +367,12 @@ void OGUIManager::mouse_drag(int x, int y)
   }
 }
 
+void OGUIManager::mouse_scroll(int direction)
+{
+  raise_event("manager", "scroll", S(direction));
+}
+
+
 void OGUIManager::set_modal_widget(widget_ptr w)
 {
   if (m_ModalWidget) { m_ModalWidget->remove(); }

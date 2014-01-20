@@ -89,6 +89,7 @@ public:
   virtual void mouse_up(int button, int x, int y) override;
   virtual void mouse_move(int x, int y) override;
   virtual void mouse_drag(int x, int y) override;
+  virtual void mouse_scroll(int direction) override;
 private:
   friend struct std::default_delete<OGUIManager>;
 
