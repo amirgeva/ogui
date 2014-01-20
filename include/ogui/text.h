@@ -52,23 +52,42 @@ protected:
 public:
   OGUI_DECLARE_WIDGET(TextWidget);
 
+  /** Returns the minimum bounding box, by measuring the text size with the assigned font */
   virtual Point get_minimum_size() const override;
 
+  /** Sets whether the text background should be copied or transparent 
+      The default is blended draw, which does not copy the background
+  */
   virtual void set_blended_draw(const bool& state) { INVALIDATING_ASSIGN(m_BlendedDraw,state);  }
 
+  /** Sets the text to be displayed */
   virtual void set_text(const xstring& text) { INVALIDATING_ASSIGN(m_Text,text); }
+
+  /** Returns the text to be displayed */
   virtual const xstring& get_text() const { return m_Text; }
+
+  /** Override the default font with a specific one */
   virtual void set_font(const xstring& font_name) 
   { 
     m_Font=FontCache::instance()->load(font_name);
     invalidate();
   }
-  virtual unsigned get_color() const { return m_Color; }
-  virtual void set_color(const unsigned& color) { INVALIDATING_ASSIGN(m_Color,color); }
-  virtual unsigned get_bg_color() const { return m_BGColor; }
-  virtual void set_bg_color(const unsigned& color) { INVALIDATING_ASSIGN(m_BGColor,color); }
 
+  /** Returns the color of the text */
+  virtual unsigned get_color() const { return m_Color; }
+
+  /** Set the color of the text */
+  virtual void set_color(const unsigned& color) { INVALIDATING_ASSIGN(m_Color, color); }
+
+  /** Returns the color of the text background */
+  virtual unsigned get_bg_color() const { return m_BGColor; }
+
+  /** Set the color of the text background */
+  virtual void set_bg_color(const unsigned& color) { INVALIDATING_ASSIGN(m_BGColor, color); }
+
+  /** Overridden method to render the text */
   virtual void redraw() override;
+
   virtual bool blended_draw() const override { return m_BlendedDraw; }
 };
 

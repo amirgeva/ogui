@@ -121,8 +121,10 @@ namespace OGUI {
     bool           empty() const { return m_Children.empty(); }
     unsigned       size()  const { return m_Children.size();  }
 
+    /** Return the number of direct child widgets */
     virtual unsigned         get_children_count() const { return m_Children.size(); }
 
+    /** Add a widget (and its subtree) as child of this widget */
     virtual void             add_child(widget_ptr w) 
     { 
       m_Children.push_back(w); 
@@ -131,6 +133,7 @@ namespace OGUI {
       invalidate();
     }
 
+    /** Remove all children from this widget */
     virtual void             clear_children()        
     {
       for(auto& c : m_Children)
@@ -140,11 +143,13 @@ namespace OGUI {
       invalidate();
     }
 
+    /** Remove this widget from its parent */
     virtual void             remove()
     {
       if (m_Parent) m_Parent->remove_child(this);
     }
 
+    /** Remove a child widget by searching for a pointer match */
     virtual void             remove_child(Widget* wp)
     {
       for(auto it=m_Children.begin();it!=m_Children.end();++it)
@@ -160,39 +165,97 @@ namespace OGUI {
       }
     }
 
+    /** Find the deepest widget in the tree, for which the position is contained in its bounding rectangle */
     virtual widget_ptr       find_leaf_widget(const Point& pos);
 
+    /** Return the minimum size needed for rendering this widget */
     virtual Point            get_minimum_size() const;
+
+    /** Return the weight (relative importance) of this widget.  This weight is compared to sibling
+        widgets in the same direct layout.  Higher weight widgets will receive a larger size allocation
+    */
     virtual float            get_layout_weight() const { return m_LayoutWeight; }
+
+    /** Set the weight (relative importance) of this widget.  This weight is compared to sibling
+        widgets in the same direct layout.  Higher weight widgets will receive a larger size allocation
+    */
     virtual void             set_layout_weight(const float& weight) { INVALIDATING_ASSIGN(m_LayoutWeight,weight); }
+
+    /** Return the layout preference in each axis.  The possible values in each axis are:
+    LAYOUT_EXPAND - Take as much space as possible
+    LAYOUT_TIGHT  - Take as little space as possible
+    value (>0)    - Specify an exact size
+    */
     virtual Point            get_layout_preference() const { return m_LayoutPreference; }
-    virtual void             set_layout_preference(const Point& lp) { INVALIDATING_ASSIGN(m_LayoutPreference,lp); }
+
+    /** Set the layout preference in each axis.  The possible values in each axis are:
+    LAYOUT_EXPAND - Take as much space as possible
+    LAYOUT_TIGHT  - Take as little space as possible
+    value (>0)    - Specify an exact size
+    */
+    virtual void             set_layout_preference(const Point& lp) { INVALIDATING_ASSIGN(m_LayoutPreference, lp); }
+
+    /** Return the amount of margin space (both axes) to allocate around all of this widget's children */
     virtual Point            get_layout_margin() const { return m_LayoutMargin; }
-    virtual void             set_layout_margin(const Point& lm) { INVALIDATING_ASSIGN(m_LayoutMargin,lm); }
+
+    /** Set the amount of margin space (both axes) to allocate around all of this widget's children */
+    virtual void             set_layout_margin(const Point& lm) { INVALIDATING_ASSIGN(m_LayoutMargin, lm); }
+
+    /** Return the amount of spacing between children widgets */
     virtual Point            get_layout_spacing() const { return m_LayoutSpacing; }
+
+    /** Set the amount of spacing between children widgets */
     virtual void             set_layout_spacing(const Point& ls) { INVALIDATING_ASSIGN(m_LayoutSpacing, ls); }
+
+    /** Return the alignment of this widget, relative to its parent area (if relevant) */
     virtual Alignment        get_alignment() const { return m_Alignment; }
+
+    /** Set the alignment of this widget, relative to its parent area (if relevant) */
     virtual void             set_alignment(const Alignment& a) { INVALIDATING_ASSIGN(m_Alignment, a); }
 
-    virtual void             set_parent(Widget* p);
-
+    /** Enable / disable this widget.  Disabled widgets are grayed out and do not receive input events */
     virtual void             enable(bool state=true) { INVALIDATING_ASSIGN(m_Enabled,state); }
+    
+    /** Disable this widget.  Disabled widgets are grayed out and do not receive input events */
     virtual void             disable() { enable(false); }
+    
+    /** Returns the enable state for this widget */
     virtual bool             enabled() { return m_Enabled; }
 
+    /** Request a redraw of this widget (and its parent lineage up to the root) */
     virtual void             invalidate() { m_Valid=false; if (m_Parent) m_Parent->invalidate(); }
+
+    /** Request a redraw of all child widgets in this widget's subtree */
     virtual void             invalidate_children() { invalidate(); for(auto& c : m_Children) c->invalidate_children(); }
+
+    /** Set to indicate that a redraw has completed */
     virtual void             validate() { m_Valid=true; }
+
+    /** Return whether the widget visual representation is up to date */
     virtual bool             valid() const { return m_Valid; }
 
+    /** Assign the searchable name. */
     virtual void             set_name(const xstring& name) { update_search_name(name); }
+
+    /** Return the fully qualified name of the widget.  This composed of both the searchable name 
+        assigned by set_name() and an automatically generated id.
+    */
     virtual const xstring&   get_name() const { return m_Name; }
 
+    /** Assign the bounding rectangle for this widget, in the parent's coordinate space */
     virtual void             set_rect(const Rect& r) { INVALIDATING_ASSIGN(m_Rect,r); }
 
+    /** Returns the bounding rectangle for this widget, in the parent's coordinate space */
     virtual const Rect&      get_rect() const { return m_Rect; }
+
+    /** Return this widget's parent */
     virtual Widget*          get_parent() { return m_Parent; }
+
+    /** Return this widget's parent */
     virtual const Widget*    get_parent() const { return m_Parent; }
+
+    /** Modify the widget's parent */
+    virtual void             set_parent(Widget* p);
 
     /** Convert point from desktop coordinates to local widget space */
     virtual Point            from_desktop(Point p) const
@@ -208,14 +271,15 @@ namespace OGUI {
       return to_desktop_recurse(p - get_rect().top_left());
     }
 
+    /** Convert the local rect to global desktop coordinates */
     virtual Rect             to_desktop(const Rect& r) const
     {
       return Rect(to_desktop(r.top_left()), to_desktop(r.bottom_right()));
     }
 
-    // Placeholder for static widgets
     virtual void             set_layout(layout_ptr layout) {}
 
+    /** Returns the region in which child widgets can draw */
     virtual Rect             get_children_clip_region() const 
     { 
       Rect r=get_rect(); 
@@ -241,21 +305,30 @@ namespace OGUI {
     virtual bool             on_mouse_leave(const Point& pos);
     virtual bool             on_char(unsigned short ch) { return false; }
 
+    /** Add a listener for a specific event from this widget */
     virtual bool             add_listener(const xstring& receiver, const xstring& event_type, event_callback cb)
     {
       return OGUIManager::instance()->add_listener(receiver,get_name(),event_type,cb);
     }
 
+    /** Remove a previously added listener */
     virtual bool             remove_listener(const xstring& receiver, const xstring& event_type)
     {
       return OGUIManager::instance()->remove_listener(receiver,get_name(),event_type);
     }
 
+    /** Raise an event to indicate that a specific state change has happened 
+        Registered listeners will be notified
+    */
     virtual void             raise_event(const xstring& type, const xstring& params="")
     {
       OGUIManager::instance()->raise_event(get_name(),type,params);
     }
 
+    /** Find a widget in this widget's subtree, by searching for its name
+        This is useful for finding widgets in layouts loaded from XML
+        For widget specific methods, use  std::static_pointer_cast<_WidgetType_>(search(........))
+    */
     virtual widget_ptr search(const xstring& name)
     {
       for(widget_ptr child : *this)

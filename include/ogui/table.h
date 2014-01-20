@@ -31,6 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+  /** Widget for multi-column table, with headers and a scrollbar
+      each cell in the table can be practically any widget, though a default
+      set_cell method exists to create TextWidgets
+  */
   class TableWidget : public StaticWidget
   {
     typedef StaticWidget super;
@@ -113,6 +117,7 @@ namespace OGUI {
       return super::draw(target,region);
     }
 
+    /** Sets the number of columns */
     virtual void set_column_count(const int& cols) 
     { 
       m_Columns=cols; 
@@ -120,6 +125,7 @@ namespace OGUI {
         r.resize(cols);
     }
 
+    /** Sets the color of the text background in the header */
     virtual void set_header_bg_color(const unsigned& color)
     {
       m_HeaderBGColor=color;
@@ -127,6 +133,7 @@ namespace OGUI {
         (std::static_pointer_cast<TextWidget>(h))->set_bg_color(color);
     }
 
+    /** Sets the color of the text in the header */
     virtual void set_header_color(const unsigned& color)
     {
       m_HeaderColor=color;
@@ -134,6 +141,7 @@ namespace OGUI {
         (std::static_pointer_cast<TextWidget>(h))->set_color(color);
     }
 
+    /** Set the column names, by passing a comma delimited string with the names */
     virtual void set_column_names(const xstring& comma_delimited_names)
     {
       xstring_tokenizer st(comma_delimited_names,",");
@@ -148,6 +156,7 @@ namespace OGUI {
       }
     }
 
+    /** Set the weight of each column, to calculate its relative width */
     virtual void  set_column_weights(const xstring& comma_delimited_weights)
     {
       m_ColumnWeights = comma_delimited_weights;
@@ -160,6 +169,7 @@ namespace OGUI {
       }
     }
 
+    /** Insert a row to the table.  Default at the end, but can be before any existing row */
     virtual void insert_row(int before = -1)
     {
       if (before<0) before=m_Table.size();
@@ -168,6 +178,7 @@ namespace OGUI {
       invalidate();
     }
 
+    /** Remove a row using its index */
     virtual void remove_row(int which)
     {
       if (which >= 0 && which < int(m_Table.size()))
@@ -186,6 +197,7 @@ namespace OGUI {
       clear();
     }
 
+    /** Clear all rows and cells */
     virtual void clear()
     {
       if (!m_Table.empty())
@@ -197,6 +209,7 @@ namespace OGUI {
       }
     }
 
+    /** Return the widget in a specific cell */
     virtual widget_ptr get_cell(int row, int col)
     {
       if (row < 0 || row >= int(m_Table.size())) return widget_ptr();
@@ -205,6 +218,7 @@ namespace OGUI {
       return r[col];
     }
 
+    /** Set the widget in a specific cell to be a TextWidget this the given text*/
     virtual void set_cell(int row, int col, const xstring& text)
     {
       text_widget_ptr tw = TextWidget::create(text);
@@ -213,6 +227,7 @@ namespace OGUI {
       set_cell(row, col, tw);
     }
 
+    /** Set the widget in a specific cell */
     virtual void set_cell(int row, int col, widget_ptr content)
     {
       if (row<0 || row>=int(m_Table.size())) return;
@@ -223,12 +238,9 @@ namespace OGUI {
       invalidate();
     }
 
-    virtual void contents_clicked(widget_ptr cell)
-    {
-      int new_sel = get_widget_row_index(cell);
-      set_selected_row(new_sel);
-    }
-
+    /** Set the index of the currently selected row 
+        Row cells will be inverted to indicate this, and a "select" event is raised
+    */
     virtual void set_selected_row(int new_sel)
     {
       if (new_sel != m_SelectedRow)
@@ -240,21 +252,28 @@ namespace OGUI {
       }
     }
 
+  protected:
+    virtual void contents_clicked(widget_ptr cell)
+    {
+      int new_sel = get_widget_row_index(cell);
+      set_selected_row(new_sel);
+    }
+
     virtual void update_contents()
     {
-      m_UpdateContents=false;
+      m_UpdateContents = false;
       grid_layout_ptr layout(new GridLayout(m_Columns));
-      layout->set_columns_weights(m_ColumnWeights);      
+      layout->set_columns_weights(m_ColumnWeights);
       m_ContentArea->set_layout(layout);
       m_ContentArea->clear_children();
-      for(auto& row : m_Table)
+      for (auto& row : m_Table)
       {
-        for(auto cell : row)
+        for (auto cell : row)
         {
           if (cell)
           {
             m_ContentArea->add_child(cell);
-            cell->add_listener(get_name(), "clicked", [this,cell](const xstring& name, const xstring& event_type, const xstring& param)
+            cell->add_listener(get_name(), "clicked", [this, cell](const xstring& name, const xstring& event_type, const xstring& param)
             {
               contents_clicked(cell);
             });

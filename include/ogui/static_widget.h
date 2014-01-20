@@ -32,12 +32,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** A blank canvas widget that is the concrete base class for the vast majority of widgets.
+    It has an image that is filled during re-draws and during the recursive draws of its
+    widget subtree.   Unless some widget in the subtree changes, this image can be used
+    to draw this widget subtree with a simple blit.
+*/
 class StaticWidget : public Widget
 {
   Image       m_DrawImage;
   layout_ptr  m_Layout;
   bool        m_Inverted;
 protected:
+  /** Allocate and return the draw image for this widget.  Must be called from redraw() */
   Image& get_redraw_target() 
   { 
     Rect rect=get_rect();
@@ -55,12 +61,29 @@ protected:
 public:
   OGUI_DECLARE_WIDGET(StaticWidget);
 
+  /** Set the layout policy for this widget, in order to arrange its children.
+      The default layout is HorizontalLayout
+      If no layout is needed, call  set_layout(layout_ptr())
+  */
   virtual void  set_layout(layout_ptr layout) { m_Layout=layout; }
   virtual Point get_minimum_size() const override;
+
+  /** Returns true if this widget should be drawn as alpha-blended (alpha channel), or false
+      if it is to be copied as is. */
   virtual bool  blended_draw() const { return false; }
+
+  /** Create the visual representation of the widget.  Overridden by derived class 
+      The default look is blank fill with the default color
+  */
   virtual void  redraw() { get_redraw_target().fill(get_skin_color(SKIN_COLOR_DEFAULT_FILL)); }
+
+  /** Draws the children onto this widget's image and then draws this image to the target */
   virtual bool  draw(Image& target, const Rect& region) override;
+
+  /** Returns true if this widget's image should be inverted.  Useful for selection type scenarios */
   virtual bool  inverted() const { return m_Inverted; }
+
+  /** Determine if this widget's image should be inverted.  Useful for selection type scenarios */
   virtual void  set_inverted(bool state) { INVALIDATING_ASSIGN(m_Inverted, state); }
 };
 
