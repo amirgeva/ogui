@@ -33,6 +33,7 @@ namespace OGUI {
 class ScrollbarWidget;
 typedef std::shared_ptr<ScrollbarWidget> scrollbar_widget_ptr;
 
+/** The thumb button of the scrollbar.  Does not get instantiated directly */
 class ScrollButtonWidget : public PushButtonWidget
 {
   typedef PushButtonWidget super;
@@ -56,6 +57,7 @@ public:
 
 typedef std::shared_ptr<ScrollButtonWidget> scroll_button_widget_ptr;
 
+/** A general purpose scrollbar */
 class ScrollbarWidget : public StaticWidget
 {
   Orientation              m_Orientation;
@@ -74,6 +76,27 @@ protected:
     set_layout(layout_ptr());
     add_child(m_Button);
   }
+
+  virtual void update_button_rect()
+  {
+    Rect rect = get_rect();
+    rect.move_to(Point(0, 0));
+    rect.inflate(-1);
+    bool vert = (m_Orientation == ORIENTATION_VERTICAL);
+    int size = vert ? rect.get_height() : rect.get_width();
+    if (vert) rect.bottom = rect.top + m_Button->get_minimum_size().y;
+    else      rect.right = rect.left + m_Button->get_minimum_size().x;
+    int button_size = vert ? rect.get_height() : rect.get_width();
+    m_MovementRange = (size - button_size);
+    //std::cout << "Movement range=" << m_MovementRange << std::endl;
+    int pos = int(m_Position*m_MovementRange + 0.5f);
+    Point ofs(0, 0);
+    if (vert) ofs.y = pos;
+    else      ofs.x = pos;
+    rect.offset(ofs);
+    m_Button->set_rect(rect);
+  }
+
 public:
   OGUI_DECLARE_WIDGET(ScrollbarWidget);
 
@@ -88,8 +111,12 @@ public:
     }
   }
 
+  /** Return the position of the scrollbar in the range of 0-1 */
   virtual float get_position() const          { return m_Position; }
 
+  /** Update the position of the scrollbar in the range of 0-1
+      and raise an event if the position has changed
+  */
   virtual void update_position(float pos)
   {
     if (m_Position != pos)
@@ -99,6 +126,7 @@ public:
     }
   }
 
+  /** Set the position of the scrollbar in the range of 0-1, without raising an event */
   virtual void set_position(const float& pos)        
   {
     m_Position = pos;
@@ -113,26 +141,7 @@ public:
       update_button_rect();
   }
 
-  virtual void update_button_rect()
-  {
-    Rect rect=get_rect();
-    rect.move_to(Point(0,0));
-    rect.inflate(-1);
-    bool vert=(m_Orientation==ORIENTATION_VERTICAL);
-    int size=vert?rect.get_height():rect.get_width();
-    if (vert) rect.bottom=rect.top+m_Button->get_minimum_size().y;
-    else      rect.right=rect.left+m_Button->get_minimum_size().x;
-    int button_size=vert?rect.get_height():rect.get_width();
-    m_MovementRange=(size-button_size);
-    //std::cout << "Movement range=" << m_MovementRange << std::endl;
-    int pos=int(m_Position*m_MovementRange+0.5f);
-    Point ofs(0,0);
-    if (vert) ofs.y=pos;
-    else      ofs.x=pos;
-    rect.offset(ofs);
-    m_Button->set_rect(rect);
-  }
-
+  /** Return the range of movement in pixels  0 - (get_movement_range()-1) */
   virtual int get_movement_range() const { return m_MovementRange; }
 
   virtual void redraw() override

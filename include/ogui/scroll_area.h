@@ -30,6 +30,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** An extension of the StaticWidget (as a widget container), but also supports a larger than available virtual space
+    which is placed inside the allotted Rectangle, and allows scrolling in order to view parts that are outside
+    the physical rectangle
+*/
 class ScrollAreaWidget : public StaticWidget
 {
   typedef StaticWidget super;
@@ -53,6 +57,7 @@ public:
     return Point(1,1); 
   }
 
+  /** Attach a vertical scrollbar widget which will control the vertical scrolling of the content */
   virtual void set_vertical_scrollbar(widget_ptr s) 
   {
     if (m_VerticalScrollbar) m_VerticalScrollbar->remove_listener(get_name(),"scroll");
@@ -63,6 +68,7 @@ public:
     });
   }
 
+  /** Force the scroll position to a specific value */
   virtual void set_scroll_position(const Point& pos)
   {
     if (m_ScrollPosition!=pos)
