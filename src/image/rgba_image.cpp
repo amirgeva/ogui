@@ -260,8 +260,9 @@ void Image::fill(Rect rect, unsigned color)
   }
 }
 
-void filter(Image& image, const Rect& rect, const float* coef)
+void filter(Image& image, const float* coef, Rect rect)
 {
+  if (rect == Rect(0, 0, 0, 0)) rect = image.get_rect();
   Image res(rect.get_size());
   for(int y=rect.top;y<(rect.bottom-2);++y)
   {

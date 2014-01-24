@@ -190,7 +190,7 @@ public:
       rect.inflate(2);
       const float f=1.0f/9.0f;
       const float coef[] = {f,f,f,f,f,f,f,f,f};
-      filter(target,rect,(const float*)coef);
+      filter(target, (const float*)coef, rect);
     }
   }
 };

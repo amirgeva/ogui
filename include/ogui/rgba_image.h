@@ -44,7 +44,9 @@ public:
   virtual unsigned char transform(unsigned char src, int channel) const { return src; }
 };
 
-
+/** Platform independent 32bpp RGBA image class.  Used as a rendering target for OGUI widgets
+    pixels can later be copied to a texture, or blitted to the screen
+*/
 class Image
 {
   typedef std::vector<byte> buffer_type;
@@ -82,6 +84,7 @@ class Image
   }
   bool load_png(std::istream& is);
 public:
+  /** Construct an empty image */
   Image() 
   : m_Width(0)
   , m_Height(0)
@@ -89,6 +92,7 @@ public:
   , m_Modified(false) 
   {}
 
+  /** Construct an image of the given size */
   Image(unsigned width, unsigned height)
   : m_ExternalData(0)
   , m_Modified(false)
@@ -96,6 +100,7 @@ public:
     initialize(width,height);
   }
 
+  /** Construct an image of the given size */
   Image(const Point& size)
   : m_ExternalData(0)
   , m_Modified(false)
@@ -103,6 +108,7 @@ public:
     initialize(size.x,size.y);
   }
 
+  /** Construct an image of the given size, and attach an external (not-owned) pixel buffer */
   Image(unsigned width, unsigned height, byte* external)
   : m_ExternalData(external)
   , m_Width(width)
@@ -110,6 +116,7 @@ public:
   , m_Modified(false)
   {}
 
+  /** Load image from a PNG file */
   Image(const std::string& png_path) 
   : m_ExternalData(0)
   , m_Modified(false)
@@ -118,7 +125,8 @@ public:
     load_png(f);
   }
 
-  Image(std::istream& png_is) 
+  /** Load image from a PNG contained in the binary string */
+  Image(std::istream& png_is)
   : m_ExternalData(0)
   , m_Modified(false)
   {
@@ -146,7 +154,10 @@ public:
     return *this;
   }
 
+  /** Load from a PNG file */
   bool load_from_file(const char* path);
+
+  /** Save to a PNG file */
   bool save_to_file(const char* path);
 
   unsigned get_width()  const  { return m_Width; }
@@ -154,8 +165,10 @@ public:
   Point    get_size()   const  { return Point(get_width(),get_height());    }
   Rect     get_rect()   const  { return Rect(0,0,get_width(),get_height()); }
 
+  /** Return a new image that is a subset of this image, given the bounding rectangle */
   Image cut(Rect r);
 
+  /** Modifying access to pixels.  Sets the modified flag */
   byte* get_row(unsigned y)
   {
     // Split owned pixel buffer, if shared
@@ -170,6 +183,7 @@ public:
     return &buffer[index];
   }
 
+  /** Read-only access to pixels.  Does not set the modified flag */
   const byte* get_row(unsigned y) const
   {
     unsigned index=y*m_Width*4;
@@ -177,16 +191,19 @@ public:
     return &buffer[index];
   }
 
+  /** Modifying access to pixels.  Sets the modified flag.  Returns a pointer to 32 bit elements. */
   unsigned* get_urow(unsigned y)
   {
     return reinterpret_cast<unsigned*>(get_row(y));
   }
 
+  /** Read-only access to pixels.  Does not set the modified flag.  Returns a pointer to 32 bit elements.  */
   const unsigned* get_urow(unsigned y) const
   {
     return reinterpret_cast<const unsigned*>(get_row(y));
   }
 
+  /** Invert (bitwise) all color channels, keeping the alpha channel the same */
   void invert()
   {
     for (unsigned y = 0; y < m_Height; ++y)
@@ -199,18 +216,38 @@ public:
     }
   }
 
+  /** Returns true if the image pixel buffer was retrieved for writing */
   bool is_modified() const { return m_Modified; }
+
+  /** Reset the modified flag.  Can be used to detect later modifications with the  is_modified() method */
   void reset_modified()    { m_Modified = false; }
 
+  /** Fills a rectangle in the image with the given color */
   void fill(Rect rect, unsigned color);
-  void fill(unsigned color) { fill(get_rect(),color); }
 
+  /** Fills the image with the given color */
+  void fill(unsigned color) { fill(get_rect(), color); }
+
+  /** Copies the source image, or part of it specified in src_rect, to this image at dst_pt position */
   void paste(const Image& src, Rect src_rect=Rect(), const Point& dst_pt=Point());
+
+  /** Similar to paste, but does alpha blending  SOURCE_ALPHA x SOURCE + (1-SOURCE_ALPHA) x DESTINATION 
+      Provides an optional transformation of the source pixels, to be applied just before the blend
+  */
   void blend_channel(const Image& src, Rect src_rect=Rect(), const Point& dst_pt=Point(), const Transform& trans=Transform());
+
+  /** Similar to paste, but does alpha blending  src_alpha x SOURCE + dst_alpha x DESTINATION */
   void blend_constant(const Image& src, Rect src_rect=Rect(), const Point& dst_pt=Point(), float src_alpha=1.0f, float dst_alpha=0.0f);
 };
 
-void filter(Image& image, const Rect& rect, const float* coef);
+/** Apply a generic 3x3 window filter to the image, using the 9 coefficients in the:  coef 
+    The default rect is for the entire image
+*/
+void filter(Image& image, const float* coef, Rect rect = Rect(0, 0, 0, 0));
+
+/** Draw the 3D highlights for a button like pattern.  sunk indicates whether to flip the hilight and lolight
+    colors, and create the visual effect of a pressed button.  Typical hilight is white, and lolight is black
+*/
 void draw_button(Image& target, const Rect& rect, bool sunk, unsigned bg_color, unsigned hilight, unsigned lolight);
 
 typedef std::shared_ptr<Image> image_ptr;
