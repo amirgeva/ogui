@@ -30,6 +30,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** This is simply a static widget, with an option to set the fill color locally 
+    and an option for a gradient.  The gradient is 2D float point, in which x,y
+    are each between -1..1   indicating the direction and amount of gradient in
+    each axis.
+*/
 class FillWidget : public StaticWidget
 {
   unsigned m_Color;

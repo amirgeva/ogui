@@ -31,15 +31,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
-
+/** Widget that shows an image loaded from a file, as its visual appearance */
 class ImageWidget : public StaticWidget
 {
   image_ptr m_Image;
 public:
   OGUI_DECLARE_WIDGET(ImageWidget);
 
+  /** Override the last set image with an image from the given file */
   virtual void  set_image(const xstring& image_path) { m_Image = ImageCache::instance()->load(image_path); invalidate(); }
+
+  /** Use a pre-loaded image, not necessarily from a file */
   virtual void  attach_image(image_ptr image) { m_Image = image; invalidate(); }
+
   virtual Point get_minimum_size() const override{ return m_Image->get_size(); }
   virtual Point get_layout_preference() const override{ return Point(LAYOUT_TIGHT,LAYOUT_TIGHT); }
   virtual void redraw() override

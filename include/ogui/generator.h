@@ -34,6 +34,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+  /** Load GUI layout from an XML source.
+      Example of usage when loading from an XML file:
+
+      ```
+      xml_element_ptr root=load_xml_from_file("my_layout.xml");
+      widget_ptr ui=load_layout_xml(root);
+      ```
+
+      Here is a more elaborate example, that loads and set the UI:
+
+      ```
+      OGUIManager::instance()->clear();
+      xml_element_ptr root=load_xml_from_file("my_layout.xml");
+      get_desktop()->add_child(load_layout_xml(root));
+      ```
+  */
   widget_ptr load_layout_xml(const xml_element_ptr root);
 
 } // namespace OGUI

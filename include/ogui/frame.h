@@ -30,6 +30,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** A widget that has a border of _width_ thickness.
+    Usually used to visually group other widgets together
+*/
 class FrameWidget : public StaticWidget
 {
   unsigned m_Color;

@@ -28,6 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** Generic button behavior, with no content
+    Used as a base class, not usually instantiated
+*/
 class ButtonWidget : public StaticWidget
 {
   bool       m_Pressed;
@@ -64,6 +67,9 @@ public:
 
 typedef std::shared_ptr<ButtonWidget> button_widget_ptr;
 
+/** Standard click button, with no content.  Can be instantiated
+    when the content is not simple text.  Use add_child to add content
+*/
 class PushButtonWidget : public ButtonWidget
 {
 public:
@@ -88,6 +94,7 @@ public:
 
 typedef std::shared_ptr<PushButtonWidget> push_button_widget_ptr;
 
+/** Standard button with text on it */
 class TextPushButtonWidget : public PushButtonWidget
 {
   text_widget_ptr m_TextWidget;
@@ -106,6 +113,7 @@ public:
 
 typedef std::shared_ptr<TextPushButtonWidget> text_push_button_widget_ptr;
 
+/** Toggle button base class, clicking the button toggles its state between pressed and not. */
 class ToggleButtonWidget : public ButtonWidget
 {
 protected:
@@ -119,8 +127,10 @@ protected:
 public:
   OGUI_DECLARE_WIDGET(ToggleButtonWidget);
 
+  /** Returns current state of the toggle */
   bool get_button_down() const { return m_ButtonDown; }
 
+  /** Modify the toggle state.  raises an event if changed */
   void set_button_down(bool state) 
   { 
     if (state != m_ButtonDown)
@@ -153,6 +163,7 @@ public:
 
 typedef std::shared_ptr<ToggleButtonWidget> toggle_button_widget_ptr;
 
+/** A toggle button with a checkbox appearance, rectange filled with an X */
 class CheckboxWidget : public ToggleButtonWidget
 {
 protected:
@@ -197,6 +208,11 @@ public:
 
 typedef std::shared_ptr<CheckboxWidget> checkbox_widget_ptr;
 
+/** Radio button, a toggle button variant with a round appearance
+    filled when selected.
+    When this widget is a child of a RadioGroupWidget, only
+    one RadioButtonWidget can be selected at any time
+*/
 class RadioButtonWidget : public ToggleButtonWidget
 {
 protected:
@@ -209,6 +225,8 @@ public:
 
 typedef std::shared_ptr<RadioButtonWidget> radio_button_widget_ptr;
 
+/** Grouping Widget that makes sure that child radio buttons behave as
+    expected and only one can be selected */
 class RadioGroupWidget : public StaticWidget
 {
   widgets_vec m_Buttons;

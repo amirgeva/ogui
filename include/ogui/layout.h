@@ -33,6 +33,7 @@ namespace OGUI {
 
 class Widget;
 
+/** Generic layout manager. */
 class Layout
 {
 public:
@@ -41,6 +42,10 @@ public:
   virtual Point get_minimum_size(const Widget* widget) const { return Point(1,1); }
 };
 
+/** A grid layout that has a constant number of columns
+    and assigns equal sized bounding rectangles to all
+    widgets 
+*/
 class GridLayout : public Layout
 {
   typedef std::vector<float> weight_seq;
@@ -57,6 +62,7 @@ public:
 
 typedef std::shared_ptr<GridLayout> grid_layout_ptr;
 
+/** Horizontal sequential arrangement of widgets */
 class HorizontalLayout : public Layout
 {
 protected:
@@ -65,6 +71,7 @@ public:
   virtual Point get_minimum_size(const Widget* widget) const override;
 };
 
+/** Vertical sequential arrangement of widgets */
 class VerticalLayout : public Layout
 {
 protected:

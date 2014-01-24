@@ -32,7 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
-
+  /** Font class, containing a pre-generated bitmap font
+      Allows for rendering of text, and measuring its size
+  */
   class Font
   {
     typedef std::vector<Rect> rects_vec;
@@ -53,13 +55,25 @@ namespace OGUI {
     { 
       build_rects(); 
     }
+
+    /** Draw the text on the target image, given the top left _offset_ and _color_ */
     void draw(Image& target, const Point& offset, const xstring& text, unsigned color) const;
-    Rect get_bounds(const xstring& text) const;
+
+    /** Returns a bounding rectangle for the given text.  
+        Basically: `Rect(0,0,size.x,size.y)`
+    */
+    Rect  get_bounds(const xstring& text) const;
+
+    /** Returns the area size needed to render this text */
+    Point get_size(const xstring& text) const;
+
+    /** Returns the non-cropped size of a single character */
     int  get_tile_size() const { return m_TileSize; }
   };
 
   typedef std::shared_ptr<Font> font_ptr;
 
+  /** Cache of fonts, to allow sharing pre-loaded fonts */
   class FontCache
   {
   public:
@@ -69,6 +83,12 @@ namespace OGUI {
       return ptr.get();
     }
 
+    /** Main use method.  Use as in the example:
+
+        ```
+        font_ptr font=FontCache::instance()->load("myfont.png");
+        ```
+    */
     font_ptr load(const xstring& name)
     {
       auto it = m_Fonts.find(name);

@@ -31,6 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+  /** Cache of loaded images [ImageWidget](ImageWidget)
+      that allows to save memory by not requiring identical
+      image files to be loaded more than once
+  */
   class ImageCache
   {
   public:
@@ -42,6 +46,12 @@ namespace OGUI {
 
     typedef std::shared_ptr<Image> pointer;
 
+    /** Main method - Load an image by using code like:
+    
+    ```
+    image=ImageCache::instance()->load("file.png");
+    ```
+    */
     pointer load(const xstring& path)
     {
       auto it = m_Images.find(path);

@@ -113,11 +113,18 @@ void Font::draw(Image& target, const Point& offset, const xstring& text, unsigne
 
 Rect Font::get_bounds(const xstring& text) const
 {
-  placement_vec placement;
-  unsigned w=create_placement(text,placement);
-  if (placement.empty()) return Rect();
-  return Rect(0,0,w,placement.front().second.get_height());
+  Point p = get_size(text);
+  return Rect(0, 0, p.x, p.y);
 }
+
+Point Font::get_size(const xstring& text) const
+{
+  placement_vec placement;
+  unsigned w = create_placement(text, placement);
+  if (placement.empty()) return Point(0,0);
+  return Point(w, placement.front().second.get_height());
+}
+
 
 } // namespace OGUI
 
