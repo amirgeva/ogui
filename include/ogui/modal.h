@@ -37,6 +37,10 @@ namespace OGUI {
     DR_NO      =8
   };
 
+  /** Generic widget for a modal pattern, typically used for popup dialogs over existing UIs
+      When a modal widget is active (only one is possible at any given time), it gets all
+      user input
+  */
   class ModalWidget : public Widget
   {
   public:
@@ -77,6 +81,11 @@ namespace OGUI {
     }
 
   public:
+    /** Take a preloaded widget tree and construct a modal widget that contains it.
+        If the widget tree contains buttons of any of the standard responses: (yes,no,ok,cancel)
+        [The button can have any text, but must have a name of one of these four]
+        The callback will be called to indicate the selection.
+    */
     static std::shared_ptr<ModalWidget> create(widget_ptr tree, modal_callback cb)
     {
       std::shared_ptr<ModalWidget> w(new ModalWidget(tree, cb));
@@ -88,6 +97,11 @@ namespace OGUI {
 
   typedef std::shared_ptr<ModalWidget> modal_widget_ptr;
 
+  /** Create a simple text dialog that shows a prompt, and has buttons that match the bitwise combination
+      specified in possible_results
+      The callback will be activated with the selected option.  
+      Useful for typical  "Are you sure you want to Z?" dialogs
+  */
   modal_widget_ptr create_text_query_dialog(const xstring& query, unsigned possible_results, ModalWidget::modal_callback cb);
 
 } // namespace OGUI
