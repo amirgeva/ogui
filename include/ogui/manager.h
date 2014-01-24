@@ -53,38 +53,139 @@ public:
     return ptr.get();
   }
 
+  /** Main initialization method.  Must be called once, to indicate the size of 
+      the virtual desktop
+  */
   void        initialize_desktop(int width, int height);
 
+  /** Return the current default font.  Initial font is preloaded automatically */
   font_ptr    get_default_font() { return m_Font; }
+
+  /** Replace the default font with an alternative */
   void        set_default_font(font_ptr font) { m_Font=font; }
+
+  /** Return a color by using one of the following indices:
+  ```
+          SKIN_COLOR_DEFAULT_FILL       - Fill color of static widgets
+          SKIN_COLOR_BUTTON_HILIGHT     - Top and left highlight of 3D button look
+          SKIN_COLOR_BUTTON_LOLIGHT     - Bottom and right highlight of 3D button look
+          SKIN_COLOR_CHECK_COLOR        - Color of check mark in checkbox
+          SKIN_COLOR_FRAME              - Color of FrameWidget border
+          SKIN_COLOR_TABLE_HEADER_BG    - Background color of column headers in a table
+          SKIN_COLOR_TABLE_HEADER_TEXT  - Text color of column headers in a table
+          SKIN_COLOR_TEXT               - Text color (in TextWidget)
+  ```
+  */
   unsigned    get_skin_color(SkinColors which);
   void        set_skin_color(SkinColors which, unsigned value);
 
+  /** Return the current skin colors.  */
   const skin_colors& get_skin_colors() const { return m_SkinColors.back(); }
+
+  /** Save the current colors in the stack and place a copy of them on the top.
+      This is used during layout XML loading, to allow local sub-tree color overrides
+  */
   void               push_color_state();
   void               pop_color_state();
 
+  /** Load color configuration from a file. The file is an XML of format similar to the following:
+  ```
+  <skin>
+    <color name="DEFAULT_FILL" value="0xFF000000"/>
+    <color name="TEXT" value="0xFFFF00FF"/>
+    .
+    .
+    .
+    .
+  </skin>
+  ```
+  */
   void        load_skin(const xstring& skin_file) 
   {
     std::ifstream f(skin_file);
     load_skin(f); 
   }
+
+  /** Load color configuration from a stream */
   void        load_skin(std::istream& skin_is);
 
+  /** Register a listener to accept event callbacks.
+      The listener_name is needed only for later calls to remove_listener
+      target_name is the name of widget that is expected to raise events
+      event_type is event type string, which can be one of the following: 
+      
+      * clicked
+      * toggled
+      * mouse_move
+      * mouse_drag
+      * mouse_enter
+      * mouse_leave
+      * scroll
+
+      The callback has the prototype of:  func(const xstring& name, const xstring& type, const xstring& param)
+      
+      * name        - Name of widget that generated the event
+      * type        - Event type (see list above)
+      * param       - Free format parameter, depending on event type
+
+      Typical cases use one of the following macros to define a lambda callback:
+
+      * OGUI_EVENT_CALLBACK
+      * OGUI_EVENT_CALLBACK_FUNC
+
+
+      Example:
+
+      ```
+      OGUIManager::instance()->add_listener("myname","widget_name","clicked",OGUI_EVENT_CALLBACK_FUNC
+      {
+        do_something;
+      });
+      ```
+
+      Calling add_listener on the widget directly shortens the code by using the widget's get_name() as the
+      first parameter to this call.
+
+      Example:
+
+      ```
+      widget->add_listener("myname","clicked",OGUI_EVENT_CALLBACK_FUNC
+      {
+      do_something;
+      });
+      ```
+
+  */
   bool        add_listener(const xstring& listener_name, const xstring& target_name, const xstring& event_type, event_callback callback);
+
+  /** Remove a previously registered listener.
+      Using clear() also removes all listeners
+  */
   bool        remove_listener(const xstring& listener_name, const xstring& target_name, const xstring& event_type);
+
+  /** Called by widgets to notify with regards to an event that just occurred */
   void        raise_event(const xstring& name, const xstring& type, const xstring& params);
 
   /** Clear all widgets in the desktop and remove all listeners */
   void        clear();
 
+  /** Return the desktop widget.  Usually used to add child UI elements */
   widget_ptr  get_desktop();
 
+  /** Register a modal widget - See [ModalWidget](ModalWidget)
+      All input events are then sent to this widget, until another or an empty widget is assigned
+  */
   void        set_modal_widget(widget_ptr w);
 
+  /** Called to direct all mouse events to a specific widget.
+      Usually used when a widget is clicked to direct drag events to it, even if the cursor left 
+      the widget's area
+  */
   void        capture_mouse(Widget* w) { m_MouseCapture=w; }
 
+  /** Hook for keyboard events.  Not implemented yet */
   virtual void on_keyboard(unsigned char key) override {}
+
   virtual void mouse_down(int button, int x, int y) override;
   virtual void mouse_up(int button, int x, int y) override;
   virtual void mouse_move(int x, int y) override;

@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
+/** 2D Point class, as a basis for GUI coordinates */
 template<class T>
 struct TPoint
 {
@@ -110,6 +111,7 @@ std::ostream& operator<< (std::ostream& os, const TPoint<T>& p)
   return os << p.x << ',' << p.y;
 }
 
+/** 2D Rect class, as a basis for GUI coordinates */
 template<class T>
 struct TRect
 {
@@ -126,8 +128,8 @@ struct TRect
   self& operator=(const self& r) { left=r.left; top=r.top; right=r.right; bottom=r.bottom; return *this; }
 
   self& offset(const point& p)      { left+=p.x; top+=p.y; right+=p.x; bottom+=p.y; return *this; }
-  self& operator+= (const point& p) { left+=p.x; top+=p.y; right+=p.x; bottom+=p.y; return *this; }
-  self& operator-= (const point& p) { left-=p.x; top-=p.y; right-=p.x; bottom-=p.y; return *this; }
+  self& operator+= (const point& p) { return offset(p); }
+  self& operator-= (const point& p) { return offset(-p); }
   self& move_to(const point& p)     { return offset(p-top_left()); }
   point get_size() const            { return point(get_width(),get_height()); }
 
