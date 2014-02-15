@@ -16,6 +16,9 @@ SDL_Texture*  g_Texture = 0;
 
 const int WIDTH = 1280, HEIGHT = 720;
 
+#include "scene.h"
+Scene g_Scene;
+
 bool init()
 {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -26,8 +29,7 @@ bool init()
   OGUIManager::instance()->initialize_desktop(WIDTH, HEIGHT);
   g_Image = Image(WIDTH, HEIGHT);
 
-  void load_scene(int width,int height);
-  load_scene(WIDTH,HEIGHT);
+  g_Scene.load(WIDTH, HEIGHT);
 
   return true;
 }

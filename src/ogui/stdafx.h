@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ogui/ogui.h>
 #include <ogui/generator.h>
 #include <ogui/layout.h>
+#include <ogui/parse.h>
 #include <algorithm>
 #include <numeric>
 
