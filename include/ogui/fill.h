@@ -47,7 +47,10 @@ protected:
 public:
   OGUI_DECLARE_WIDGET(FillWidget);
 
+  /** Set the fill color */
   virtual void  set_color(const unsigned& color) { INVALIDATING_ASSIGN(m_Color,color); }
+  
+  /** Set the direction and magnitude of the gradient */
   virtual void  set_gradient(const fPoint& gradient) { INVALIDATING_ASSIGN(m_Gradient,gradient); }
 
   virtual Point get_minimum_size() const override 

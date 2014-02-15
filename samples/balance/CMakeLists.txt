@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 2.8)
+include_directories(../../include)
+IF(MSVC)
+add_definitions( "/wd4005 /wd4996 /nologo" )
+if (DEFINED ENV{SDL})
+    set(SDL $ENV{SDL})
+else()
+    message(SEND_ERROR "Please define  SDL  environment variable to point to SDL home")
+endif()
+link_directories(${SDL}/lib/x86)
+include_directories(${SDL}/include)
+ENDIF(MSVC)
+
+#INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
+
+IF(CMAKE_COMPILER_IS_GNUCXX)
+add_definitions("-std=c++11")
+ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+
+add_executable(balance main.cpp scene.cpp)
+target_link_libraries(balance image ogui demo SDL2 SDL2main)

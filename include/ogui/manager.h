@@ -42,8 +42,12 @@ typedef std::shared_ptr<Widget> widget_ptr;
 typedef std::shared_ptr<Layout> layout_ptr;
 typedef std::function<void(xstring,xstring,xstring)> event_callback;
 #define OGUI_EVENT_CALLBACK [this](const xstring& name, const xstring& event_type, const xstring& param)
+#define OGUI_EVENT_CALLBACK1(x1) [this,x1](const xstring& name, const xstring& event_type, const xstring& param)
+#define OGUI_EVENT_CALLBACK2(x1,x2) [this,x1,x2](const xstring& name, const xstring& event_type, const xstring& param)
+#define OGUI_EVENT_CALLBACK3(x1,x2,x3) [this,x1,x2,x3](const xstring& name, const xstring& event_type, const xstring& param)
 #define OGUI_EVENT_CALLBACK_FUNC [](const xstring& name, const xstring& event_type, const xstring& param)
 
+/** Main OGUI coordination singleton class */
 class OGUIManager : public InputCallback
 {
 public:

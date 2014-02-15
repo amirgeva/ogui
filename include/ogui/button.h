@@ -61,7 +61,11 @@ public:
     draw_button(target, get_rect(), m_Pressed, get_skin_color(SKIN_COLOR_DEFAULT_FILL), get_skin_color(SKIN_COLOR_BUTTON_HILIGHT), get_skin_color(SKIN_COLOR_BUTTON_LOLIGHT));
   }
 
+  /** Set the pressed state of the button.  For a non-toggle button this is temporary
+      until a mouse_up event occurs. */
   virtual void set_pressed(const bool& pressed) { INVALIDATING_ASSIGN(m_Pressed,pressed); }
+  
+  /** Returns the pressed state of the button */
   virtual bool get_pressed() const       { return m_Pressed; }
 };
 
@@ -137,6 +141,7 @@ public:
     {
       invalidate();
       m_ButtonDown = state;
+      set_pressed(m_ButtonDown);
       raise_event("toggled", (m_ButtonDown ? "down" : "up"));
     }
   }
@@ -217,6 +222,10 @@ class RadioButtonWidget : public ToggleButtonWidget
 {
 protected:
   virtual bool button_clicked_state(bool old_state) const override { return true; }
+  RadioButtonWidget()
+  {
+    set_property("RadioButton", "YES");
+  }
 public:
   OGUI_DECLARE_WIDGET(RadioButtonWidget);
 
@@ -230,10 +239,15 @@ typedef std::shared_ptr<RadioButtonWidget> radio_button_widget_ptr;
 class RadioGroupWidget : public StaticWidget
 {
   widgets_vec m_Buttons;
+  void selection_changed(const xstring& name)
+  {
+    raise_event("select", name);
+  }
 public:
   OGUI_DECLARE_WIDGET(RadioGroupWidget);
 
   virtual void add_child(widget_ptr w) override;
+
 };
 
 typedef std::shared_ptr<RadioGroupWidget> radio_group_widget_ptr;

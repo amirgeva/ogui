@@ -32,88 +32,88 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
-  /** Font class, containing a pre-generated bitmap font
-      Allows for rendering of text, and measuring its size
+/** Font class, containing a pre-generated bitmap font
+    Allows for rendering of text, and measuring its size
+*/
+class Font
+{
+  typedef std::vector<Rect> rects_vec;
+  typedef std::vector<std::pair<Point,Rect>> placement_vec;
+  Image     m_Image;
+  char      m_FirstChar;
+  int       m_TileSize;
+  rects_vec m_Rects;
+
+
+  void     build_rects();
+  unsigned create_placement(const xstring& text, placement_vec& placement) const;
+public:
+  Font(Image image, char first_char, int tile_size) 
+    : m_Image(image) 
+    , m_FirstChar(first_char)
+    , m_TileSize(tile_size)
+  { 
+    build_rects(); 
+  }
+
+  /** Draw the text on the target image, given the top left _offset_ and _color_ */
+  void draw(Image& target, const Point& offset, const xstring& text, unsigned color) const;
+
+  /** Returns a bounding rectangle for the given text.  
+      Basically: `Rect(0,0,size.x,size.y)`
   */
-  class Font
+  Rect  get_bounds(const xstring& text) const;
+
+  /** Returns the area size needed to render this text */
+  Point get_size(const xstring& text) const;
+
+  /** Returns the non-cropped size of a single character */
+  int  get_tile_size() const { return m_TileSize; }
+};
+
+typedef std::shared_ptr<Font> font_ptr;
+
+/** Cache of fonts, to allow sharing pre-loaded fonts */
+class FontCache
+{
+public:
+  static FontCache* instance()
   {
-    typedef std::vector<Rect> rects_vec;
-    typedef std::vector<std::pair<Point,Rect>> placement_vec;
-    Image     m_Image;
-    char      m_FirstChar;
-    int       m_TileSize;
-    rects_vec m_Rects;
+    static std::unique_ptr<FontCache> ptr(new FontCache);
+    return ptr.get();
+  }
 
+  /** Main use method.  Use as in the example:
 
-    void     build_rects();
-    unsigned create_placement(const xstring& text, placement_vec& placement) const;
-  public:
-    Font(Image image, char first_char, int tile_size) 
-      : m_Image(image) 
-      , m_FirstChar(first_char)
-      , m_TileSize(tile_size)
-    { 
-      build_rects(); 
-    }
-
-    /** Draw the text on the target image, given the top left _offset_ and _color_ */
-    void draw(Image& target, const Point& offset, const xstring& text, unsigned color) const;
-
-    /** Returns a bounding rectangle for the given text.  
-        Basically: `Rect(0,0,size.x,size.y)`
-    */
-    Rect  get_bounds(const xstring& text) const;
-
-    /** Returns the area size needed to render this text */
-    Point get_size(const xstring& text) const;
-
-    /** Returns the non-cropped size of a single character */
-    int  get_tile_size() const { return m_TileSize; }
-  };
-
-  typedef std::shared_ptr<Font> font_ptr;
-
-  /** Cache of fonts, to allow sharing pre-loaded fonts */
-  class FontCache
+      ```
+      font_ptr font=FontCache::instance()->load("myfont.png");
+      ```
+  */
+  font_ptr load(const xstring& name)
   {
-  public:
-    static FontCache* instance()
-    {
-      static std::unique_ptr<FontCache> ptr(new FontCache);
-      return ptr.get();
-    }
+    auto it = m_Fonts.find(name);
+    if (it != m_Fonts.end()) return it->second;
+    m_Fonts[name] = load_new(name);
+    return load(name);
+  }
 
-    /** Main use method.  Use as in the example:
+private:
+  font_ptr load_new(const xstring& name)
+  {
+    Image image(name);
+    int tile_size = image.get_width() / 10;
+    char first_char = ' ';
+    return font_ptr(new Font(image, first_char, tile_size));
+  }
 
-        ```
-        font_ptr font=FontCache::instance()->load("myfont.png");
-        ```
-    */
-    font_ptr load(const xstring& name)
-    {
-      auto it = m_Fonts.find(name);
-      if (it != m_Fonts.end()) return it->second;
-      m_Fonts[name] = load_new(name);
-      return load(name);
-    }
+  friend struct std::default_delete<FontCache>;
+  FontCache() {}
+  ~FontCache() {}
+  FontCache(const FontCache&) {}
+  FontCache& operator= (const FontCache&) { return *this; }
 
-  private:
-    font_ptr load_new(const xstring& name)
-    {
-      Image image(name);
-      int tile_size = image.get_width() / 10;
-      char first_char = ' ';
-      return font_ptr(new Font(image, first_char, tile_size));
-    }
-
-    friend struct std::default_delete<FontCache>;
-    FontCache() {}
-    ~FontCache() {}
-    FontCache(const FontCache&) {}
-    FontCache& operator= (const FontCache&) { return *this; }
-
-    std::unordered_map<xstring, font_ptr> m_Fonts;
-  };
+  std::unordered_map<xstring, font_ptr> m_Fonts;
+};
 
 } // namespace OGUI
 

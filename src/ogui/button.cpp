@@ -80,6 +80,7 @@ namespace OGUI {
               other->set_button_down(false);
             }
           }
+          selection_changed(button->get_name());
         }
       });
     }

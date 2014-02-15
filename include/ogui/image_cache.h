@@ -31,49 +31,49 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace OGUI {
 
-  /** Cache of loaded images [ImageWidget](ImageWidget)
-      that allows to save memory by not requiring identical
-      image files to be loaded more than once
-  */
-  class ImageCache
+/** Cache of loaded images [ImageWidget](ImageWidget)
+    that allows to save memory by not requiring identical
+    image files to be loaded more than once
+*/
+class ImageCache
+{
+public:
+  static ImageCache* instance()
   {
-  public:
-    static ImageCache* instance()
-    {
-      static std::unique_ptr<ImageCache> ptr(new ImageCache);
-      return ptr.get();
-    }
+    static std::unique_ptr<ImageCache> ptr(new ImageCache);
+    return ptr.get();
+  }
 
-    typedef std::shared_ptr<Image> pointer;
+  typedef std::shared_ptr<Image> pointer;
 
-    /** Main method - Load an image by using code like:
+  /** Main method - Load an image by using code like:
     
-    ```
-    image=ImageCache::instance()->load("file.png");
-    ```
-    */
-    pointer load(const xstring& path)
-    {
-      auto it = m_Images.find(path);
-      if (it != m_Images.end()) return it->second;
-      m_Images[path] = load_new(path);
-      return load(path);
-    }
+  ```
+  image=ImageCache::instance()->load("file.png");
+  ```
+  */
+  pointer load(const xstring& path)
+  {
+    auto it = m_Images.find(path);
+    if (it != m_Images.end()) return it->second;
+    m_Images[path] = load_new(path);
+    return load(path);
+  }
 
-  private:
-    virtual pointer load_new(const xstring& path)
-    {
-      return pointer(new Image(path));
-    }
+private:
+  virtual pointer load_new(const xstring& path)
+  {
+    return pointer(new Image(path));
+  }
 
-    friend struct std::default_delete<ImageCache>;
-    ImageCache() {}
-    ~ImageCache() {}
-    ImageCache(const ImageCache&) {}
-    ImageCache& operator= (const ImageCache&) { return *this; }
+  friend struct std::default_delete<ImageCache>;
+  ImageCache() {}
+  ~ImageCache() {}
+  ImageCache(const ImageCache&) {}
+  ImageCache& operator= (const ImageCache&) { return *this; }
 
-    std::unordered_map<xstring, pointer> m_Images;
-  };
+  std::unordered_map<xstring, pointer> m_Images;
+};
 
 
 

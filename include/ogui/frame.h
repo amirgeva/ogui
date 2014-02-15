@@ -55,6 +55,7 @@ protected:
 public:
   OGUI_DECLARE_WIDGET(FrameWidget);
 
+  /** Set the color of the frame border */
   virtual void set_color(const unsigned& color) { INVALIDATING_ASSIGN(m_Color,color); }
   virtual void set_width(const unsigned& width) { INVALIDATING_ASSIGN(m_Width,width); }
 
