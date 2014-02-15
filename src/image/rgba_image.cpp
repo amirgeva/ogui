@@ -298,6 +298,75 @@ void draw_button(Image& target, const Rect& rect, bool sunk, unsigned bg_color, 
   target.fill(Rect(rect.get_width()-1,1,rect.get_width(),rect.get_height()),colors[c^1]);
 }
 
+void draw_vertical_line(Image& target, const Point& from, const Point& to, unsigned color)
+{
+  if (to.y < from.y) draw_vertical_line(target, to, from, color);
+  else
+  {
+    for (int y = from.y; y < to.y; ++y)
+    {
+      unsigned* row = target.get_urow(y);
+      row[from.x] = color;
+    }
+  }
+}
+
+void draw_horizontal_line(Image& target, const Point& from, const Point& to, unsigned color)
+{
+  int x0 = Min(from.x, to.x);
+  int x1 = Max(from.x, to.x);
+  unsigned* row = target.get_urow(from.y);
+  for (; x0 < x1;++x0)
+    row[x0] = color;
+}
+
+void draw_line(Image& target, const Point& from, const Point& to, unsigned color)
+{
+  int dx = to.x - from.x;
+  int dy = to.y - from.y;
+  if (dx == 0) draw_vertical_line(target, from, to, color);
+  else
+  if (dy == 0) draw_horizontal_line(target, from, to, color);
+  else
+  {
+
+  }
+  double sx = (dx > 0 ? 1.0 : -1.0);
+  double sy = (dy > 0 ? 1.0 : -1.0);
+  double error = 0;
+  if (abs(dx) > abs(dy))
+  {
+    double derr = abs(double(dy) / double(dx));
+    int y = from.y;
+    for (int x = from.x; x != to.x; x += sx)
+    {
+      unsigned* row = target.get_urow(y);
+      row[x] = color;
+      error += derr;
+      if (error >= 0.5)
+      {
+        y += sy;
+        error -= 1;
+      }
+    }
+  }
+  else
+  {
+    double derr = abs(double(dx) / double(dy));
+    int x = from.x;
+    for (int y = from.y; y != to.y; y += sy)
+    {
+      unsigned* row = target.get_urow(y);
+      row[x] = color;
+      error += derr;
+      if (error >= 0.5)
+      {
+        x += sx;
+        error -= 1;
+      }
+    }
+  }
+}
 
 
 } // namespace OGUI

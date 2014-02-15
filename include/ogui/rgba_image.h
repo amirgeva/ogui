@@ -250,6 +250,10 @@ void filter(Image& image, const float* coef, Rect rect = Rect(0, 0, 0, 0));
 */
 void draw_button(Image& target, const Rect& rect, bool sunk, unsigned bg_color, unsigned hilight, unsigned lolight);
 
+/** Draw a simple line on the image, from point to point, using the given color
+*/
+void draw_line(Image& target, const Point& from, const Point& to, unsigned color);
+
 typedef std::shared_ptr<Image> image_ptr;
 
 } // namespace OGUI

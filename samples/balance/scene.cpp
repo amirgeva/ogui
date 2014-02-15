@@ -8,14 +8,15 @@
 
 void Scene::load(int width, int height)
 {
-  coord_background_widget_ptr bg = CoordinatesBackground::create();
-  bg->set_rect(Rect(0, 0, width, height));
-  bg->add_listener("scene","clicked",OGUI_EVENT_CALLBACK
+  m_CoordsWidget = CoordinatesBackground::create();
+  m_CoordsWidget->set_rect(Rect(0, 0, width, height));
+  m_CoordsWidget->start_polygon(0xFF00FF00);
+  m_CoordsWidget->add_listener("scene", "clicked", OGUI_EVENT_CALLBACK
   {
     clicked(parse_Point(param));
   });
   widget_ptr desktop = OGUIManager::instance()->get_desktop();
-  desktop->add_child(bg);
+  desktop->add_child(m_CoordsWidget);
   buttons_group_ptr g = ButtonsGroup::create();
   g->add_button("Wing");
   g->add_button("Motor");
@@ -26,4 +27,13 @@ void Scene::load(int width, int height)
   {
     set_mode(param);
   });
+}
+
+void Scene::clicked(const Point& p)
+{
+  if (m_Mode == "Wing")
+  {
+    m_CoordsWidget->add_polygon_point(pixel_to_mm(p));
+    //m_WingPoints.push_back(pixel_to_mm(p));
+  }
 }
