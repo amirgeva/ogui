@@ -67,6 +67,7 @@ private:
   Point                   m_LayoutPreference;
   Point                   m_LayoutMargin;
   Point                   m_LayoutSpacing;
+  Point                   m_MouseDownPos;
   float                   m_LayoutWeight;
   Alignment               m_Alignment;
   skin_colors             m_ColorsOverride;

@@ -95,6 +95,7 @@ bool Widget::on_mouse_down(int button, const Point& pos)
   }
   if (!child_found)
   {
+    m_MouseDownPos = pos;
     OGUIManager::instance()->capture_mouse(this);
     raise_event("mouse_down",S(pos));
     return true;
@@ -104,12 +105,16 @@ bool Widget::on_mouse_down(int button, const Point& pos)
 
 bool Widget::on_mouse_up(int button, const Point& pos)
 {
-  Rect r = get_rect();
-  r.move_to(Point(0, 0));
-  if (r.point_inside(pos))
+  raise_event("mouse_up", S(pos));
+  if (pos == m_MouseDownPos)
   {
-    raise_event("clicked",S(pos));
-    return true;
+    Rect r = get_rect();
+    r.move_to(Point(0, 0));
+    if (r.point_inside(pos))
+    {
+      raise_event("clicked", S(pos));
+      return true;
+    }
   }
   return false;
 }
