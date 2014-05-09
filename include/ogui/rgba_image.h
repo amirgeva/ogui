@@ -158,7 +158,7 @@ public:
   bool load_from_file(const char* path);
 
   /** Save to a PNG file */
-  bool save_to_file(const char* path);
+  bool save_to_file(const char* path) const;
 
   unsigned get_width()  const  { return m_Width; }
   unsigned get_height() const  { return m_Height; }
@@ -168,15 +168,21 @@ public:
   /** Return a new image that is a subset of this image, given the bounding rectangle */
   Image cut(Rect r);
 
-  /** Modifying access to pixels.  Sets the modified flag */
-  byte* get_row(unsigned y)
+  /** Makes sure the pixel buffer of the image is not shared.  Make a copy if necessary */
+  void sever()
   {
-    // Split owned pixel buffer, if shared
     if (owned_data() && !m_Data.unique())
     {
       buffer_ptr p = m_Data;
       m_Data = buffer_ptr(new buffer_type(*p));
     }
+  }
+
+  /** Modifying access to pixels.  Sets the modified flag */
+  byte* get_row(unsigned y)
+  {
+    // Sever owned pixel buffer, if shared
+    sever();
     m_Modified = true;
     unsigned index=y*m_Width*4;
     byte* buffer = get_image_buffer();

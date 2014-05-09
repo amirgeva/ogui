@@ -68,7 +68,7 @@ bool Image::load_from_file(const char* path)
   return load_png(f);
 }
 
-bool Image::save_to_file(const char* path)
+bool Image::save_to_file(const char* path) const
 {
   {
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -90,7 +90,7 @@ bool Image::save_to_file(const char* path)
     if (setjmp(png_jmpbuf(png_ptr))) return false;
 
     std::vector<png_bytep> rows(m_Height);
-    for(unsigned y=0;y<m_Height;++y) rows[y]=get_row(y);
+    for(unsigned y=0;y<m_Height;++y) rows[y]=const_cast<png_bytep>(get_row(y));
     png_write_image(png_ptr, &rows[0]);
     if (setjmp(png_jmpbuf(png_ptr))) return false;
     png_write_end(png_ptr, NULL);

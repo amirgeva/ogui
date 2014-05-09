@@ -30,6 +30,7 @@ namespace OGUI {
 void GridLayout::arrange(Widget* widget)
 {
   if (m_Columns<1) m_Columns=1;
+  Point sp=widget->get_layout_spacing();
   float sum_weights = std::accumulate(m_Weights.begin(), m_Weights.end(), 0.0f);
   Rect r=widget->get_children_clip_region();
   int maxh=0,y=r.top,x=r.left,c=0;
@@ -43,12 +44,12 @@ void GridLayout::arrange(Widget* widget)
     float weight = *wit++;
     int dx = int((weight / sum_weights) * total_width);
     w->set_rect(Rect(x,y,x+dx,y+maxh));
-    x+=dx;
+    x+=dx+sp.x;
     if (++c==m_Columns)
     {
       c=0;
       x=r.left;
-      y+=maxh;
+      y+=maxh+sp.y;
       wit = m_Weights.begin();
     }
     ++index;
