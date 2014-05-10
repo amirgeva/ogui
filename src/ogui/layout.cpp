@@ -78,7 +78,9 @@ Point GridLayout::get_minimum_size(const Widget* widget) const
     mx.y=Max(mx.y,mn.y);
   }
   int rows=(n+m_Columns-1)/m_Columns;
-  return Point(m_Columns*mx.x,rows*mx.y);
+  Point sp = widget->get_layout_spacing();
+  Point spacing((m_Columns - 1)*sp.x, (rows - 1)*sp.y);
+  return spacing+Point(m_Columns*mx.x,rows*mx.y);
 }
 
 void HorizontalLayout::arrange(Widget* widget)
