@@ -76,7 +76,7 @@ namespace OGUI {
           {
             if (cand != button)
             {
-              radio_button_widget_ptr other = std::static_pointer_cast<RadioButtonWidget>(cand);
+              radio_button_widget_ptr other = RadioButtonWidget::cast(cand);
               other->set_button_down(false);
             }
           }

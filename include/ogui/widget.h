@@ -39,7 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 virtual xstring get_type() const { return #name; }\
                            static std::shared_ptr<name> create()                       { return std::shared_ptr<name>(new name); }\
 template<class A>          static std::shared_ptr<name> create(const A& a)             { return std::shared_ptr<name>(new name(a)); }\
-template<class A, class B> static std::shared_ptr<name> create(const A& a, const B& b) { return std::shared_ptr<name>(new name(a, b)); }
+template<class A, class B> static std::shared_ptr<name> create(const A& a, const B& b) { return std::shared_ptr<name>(new name(a, b)); }\
+static std::shared_ptr<name> cast(widget_ptr ptr) { return std::static_pointer_cast<name>(ptr); }
 
 //#define OGUI_INSTANTIATE(name) name::instantiate()
 //#define OGUI_INSTANTIATE_1(name,p1) name::instantiate(p1)
@@ -346,7 +347,7 @@ public:
 
   /** Find a widget in this widget's subtree, by searching for its name
       This is useful for finding widgets in layouts loaded from XML
-      For widget specific methods, use  std::static_pointer_cast<_WidgetType_>(search(........))
+      For widget specific methods, use  _WidgetType_::cast(search(........))
   */
   virtual widget_ptr search(const xstring& name)
   {

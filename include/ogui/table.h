@@ -100,7 +100,7 @@ protected:
     {
       auto& row = m_Table[row_index];
       for (auto cell : row)
-        (std::static_pointer_cast<StaticWidget>(cell))->set_inverted(state);
+        StaticWidget::cast(cell)->set_inverted(state);
     }
   }
 public:
@@ -130,7 +130,7 @@ public:
   {
     m_HeaderBGColor=color;
     for(auto& h : *m_Header)
-      (std::static_pointer_cast<TextWidget>(h))->set_bg_color(color);
+      TextWidget::cast(h)->set_bg_color(color);
   }
 
   /** Sets the color of the text in the header */
@@ -138,7 +138,7 @@ public:
   {
     m_HeaderColor=color;
     for(auto& h : *m_Header)
-      (std::static_pointer_cast<TextWidget>(h))->set_color(color);
+      TextWidget::cast(h)->set_color(color);
   }
 
   /** Set the column names, by passing a comma delimited string with the names */
@@ -233,7 +233,7 @@ public:
   /** Returns the text in a specific cell, assuming there's a TextWidget there */
   virtual const xstring& get_cell_text(int row, int col) const
   {
-    const text_widget_ptr tw = std::static_pointer_cast<TextWidget>(get_cell(row, col));
+    const text_widget_ptr tw = TextWidget::cast(get_cell(row, col));
     return tw->get_text();
   }
 
