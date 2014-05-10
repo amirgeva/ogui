@@ -169,13 +169,16 @@ public:
     }
   }
 
-  /** Insert a row to the table.  Default at the end, but can be before any existing row */
-  virtual void insert_row(int before = -1)
+  /** Insert a row to the table.  Default at the end, but can be before any existing row 
+      Returns the index of the inserted row
+  */
+  virtual int insert_row(int before = -1)
   {
     if (before<0) before=m_Table.size();
     m_Table.insert(m_Table.begin()+before,table_row(m_Columns));
     m_UpdateContents=true;
     invalidate();
+    return before;
   }
 
   /** Remove a row using its index */
@@ -216,6 +219,22 @@ public:
     table_row& r = m_Table[row];
     if (col < 0 || col >= int(r.size())) return widget_ptr();
     return r[col];
+  }
+
+  /** Return the widget in a specific cell */
+  virtual const widget_ptr get_cell(int row, int col) const
+  {
+    if (row < 0 || row >= int(m_Table.size())) return widget_ptr();
+    const table_row& r = m_Table[row];
+    if (col < 0 || col >= int(r.size())) return widget_ptr();
+    return r[col];
+  }
+
+  /** Returns the text in a specific cell, assuming there's a TextWidget there */
+  virtual const xstring& get_cell_text(int row, int col) const
+  {
+    const text_widget_ptr tw = std::static_pointer_cast<TextWidget>(get_cell(row, col));
+    return tw->get_text();
   }
 
   /** Set the widget in a specific cell to be a TextWidget this the given text*/
