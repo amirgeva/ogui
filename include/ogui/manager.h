@@ -125,6 +125,7 @@ public:
       * mouse_enter
       * mouse_leave
       * scroll
+      * select
 
       The callback has the prototype of:  func(const xstring& name, const xstring& type, const xstring& param)
       
@@ -135,6 +136,7 @@ public:
       Typical cases use one of the following macros to define a lambda callback:
 
       * OGUI_EVENT_CALLBACK
+      * OGUI_EVENT_CALLBACKx  - where x is a digit indicating number of extra captured variables
       * OGUI_EVENT_CALLBACK_FUNC
 
 
@@ -186,6 +188,15 @@ public:
       the widget's area
   */
   void        capture_mouse(Widget* w) { m_MouseCapture=w; }
+
+  /** Optionally call this method from the main program loop, to allow widgets to perform asynchronous tasks. 
+      The dt parameter is optional as well, and indicates the time from the last call to on_idle (in seconds).
+      Widgets that want to get idle calls, need to add a listener to the event raised here.
+  */
+  virtual void on_idle(float dt=0) 
+  {
+    raise_event("manager", "idle", S(dt));
+  }
 
   /** Hook for keyboard events.  Not implemented yet */
   virtual void on_keyboard(unsigned char key) override {}
