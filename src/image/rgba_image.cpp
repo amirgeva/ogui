@@ -331,8 +331,8 @@ void draw_line(Image& target, const Point& from, const Point& to, unsigned color
   {
 
   }
-  double sx = (dx > 0 ? 1.0 : -1.0);
-  double sy = (dy > 0 ? 1.0 : -1.0);
+  int sx = (dx > 0 ? 1 : -1);
+  int sy = (dy > 0 ? 1 : -1);
   double error = 0;
   if (abs(dx) > abs(dy))
   {
