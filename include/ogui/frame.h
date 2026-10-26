@@ -58,7 +58,7 @@ public:
 
   /** Set the color of the frame border */
   virtual void set_color(const unsigned& color) { INVALIDATING_ASSIGN(m_Color,color); }
-  virtual void set_width(const unsigned& width) { INVALIDATING_ASSIGN(m_Width,width); }
+  virtual void set_width(const unsigned& width) { INVALIDATING_ASSIGN(m_Width,int(width)); }
 
   virtual Rect get_children_clip_region() const override
   {

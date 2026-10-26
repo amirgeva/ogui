@@ -185,7 +185,6 @@ public:
     if (get_button_down())
     {
       unsigned mark_color=get_skin_color(SKIN_COLOR_CHECK_COLOR);
-      unsigned shadow_color=brighten(mark_color,0.6f);
       Image& target=get_redraw_target();
       Rect rect=get_rect();
       rect.move_to(Point(0,0));

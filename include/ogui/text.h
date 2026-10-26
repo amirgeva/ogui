@@ -40,10 +40,10 @@ class TextWidget : public StaticWidget
   bool        m_BlendedDraw;
 protected:
   TextWidget(const xstring& text="", unsigned color=0) 
-    : m_Font(OGUIManager::instance()->get_default_font())
-    , m_BGColor(0)
-    , m_Color(color)
+    : m_Color(color)
     , m_Text(text)
+    , m_Font(OGUIManager::instance()->get_default_font())
+    , m_BGColor(0)
     , m_BlendedDraw(true)
   {
     if (color == 0)

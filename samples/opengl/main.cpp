@@ -3,6 +3,7 @@
 #include <glew.h>
 #include <glut.h>
 #include <string.h>
+#include <stdlib.h>
 #include <ogui/ogui.h>
 
 using namespace OGUI;
@@ -23,7 +24,7 @@ const char* vertex_shader_src =
 const char* fragment_shader_src = 
 "#version 330\n\n"
 "uniform sampler2D utexture;\n\n"
-"in vec2 vTexCoord;\n\n"
+"smooth in vec2 vTexCoord;\n\n"
 "out vec4 vFragColor;\n\n"
 "void main()\n{\n"
 "  vFragColor = texture(utexture, vTexCoord);\n"
@@ -49,7 +50,11 @@ void render()
   if (!initialized)
   {
     initialized = true;
-    if (!init()) glutExit();
+    if (!init())
+    {
+      glutExit();
+      exit(1);
+    }
   }
 
   glUseProgram(g_Program);
@@ -87,6 +92,19 @@ void render()
   glutSwapBuffers();
 }
 
+static void print_info_log(GLuint object, bool is_program)
+{
+  GLint mlen = 0;
+  if (is_program) glGetProgramiv(object, GL_INFO_LOG_LENGTH, &mlen);
+  else            glGetShaderiv(object, GL_INFO_LOG_LENGTH, &mlen);
+  if (mlen <= 0) return;
+  std::string s;
+  s.resize(mlen);
+  if (is_program) glGetProgramInfoLog(object, mlen, 0, &s[0]);
+  else            glGetShaderInfoLog(object, mlen, 0, &s[0]);
+  std::cout << s << std::endl;
+}
+
 bool init()
 {
   int w = glutGet(GLUT_WINDOW_WIDTH);
@@ -119,14 +137,8 @@ bool init()
   glGetShaderiv(g_VertexShader, GL_COMPILE_STATUS, &status);
   if (!status)
   {
-    GLint mlen;
-    glGetShaderiv(g_VertexShader, GL_INFO_LOG_LENGTH, &mlen);
-    std::string s;
-    s.resize(mlen);
-    char* ptr = &s[0];
-    glGetShaderInfoLog(g_VertexShader, mlen, 0, ptr);
     std::cout << "Failed to compile vertex shader\n" << std::endl;
-    std::cout << s << std::endl;
+    print_info_log(g_VertexShader, false);
     return false;
   }
   g_FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -137,6 +149,7 @@ bool init()
   if (!status)
   {
     std::cout << "Failed to compile fragment shader\n" << std::endl;
+    print_info_log(g_FragmentShader, false);
     return false;
   }
 
@@ -148,6 +161,7 @@ bool init()
   if (!status)
   {
     std::cout << "Failed to link shaders program\n" << std::endl;
+    print_info_log(g_Program, true);
     return false;
   }
 

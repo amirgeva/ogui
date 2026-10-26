@@ -57,12 +57,12 @@ class TableWidget : public StaticWidget
 protected:
   TableWidget() 
   : m_Columns(1)
-  , m_HeaderBGColor(get_skin_color(SKIN_COLOR_TABLE_HEADER_BG))
-  , m_HeaderColor(get_skin_color(SKIN_COLOR_TABLE_HEADER_TEXT))
-  , m_Header(ScrollAreaWidget::create())
-  , m_Body(StaticWidget::create())
   , m_ContentArea(ScrollAreaWidget::create())
+  , m_Body(StaticWidget::create())
+  , m_Header(ScrollAreaWidget::create())
   , m_Scrollbar(ScrollbarWidget::create())
+  , m_HeaderColor(get_skin_color(SKIN_COLOR_TABLE_HEADER_TEXT))
+  , m_HeaderBGColor(get_skin_color(SKIN_COLOR_TABLE_HEADER_BG))
   , m_UpdateContents(true)
   , m_SelectedRow(-1)
   {

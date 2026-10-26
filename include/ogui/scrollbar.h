@@ -68,8 +68,8 @@ protected:
   ScrollbarWidget()
   : m_Orientation(ORIENTATION_VERTICAL)
   , m_Position(0)
-  , m_MovementRange(0)
   , m_Button(ScrollButtonWidget::create())
+  , m_MovementRange(0)
   {
     m_Button->m_Scrollbar=this;
     m_Button->m_Orientation=m_Orientation;

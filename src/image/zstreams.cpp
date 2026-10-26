@@ -97,8 +97,8 @@ class inflate_input_streambuf : public filtering_input_streambuf
 public:
   inflate_input_streambuf(std::istream& is) 
   : m_Source(is)
-  , next(0)
   , have(0)
+  , next(0)
   , done(false)
   //, flog("inflate.log",std::ios::out|std::ios::binary)
   {
@@ -235,7 +235,7 @@ public:
       strm.avail_out = CHUNK;
       strm.next_out = out;
       ret = deflate(&strm, flush);
-      if (ret==Z_STREAM_ERROR) throw xstring("Failure in zlib deflate");
+      if (ret==Z_STREAM_ERROR) break; // Cannot throw from a destructor
       have = CHUNK - strm.avail_out;
       m_Target.write((const char*)out,have);
     } while (strm.avail_out==0);

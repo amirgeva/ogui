@@ -13,9 +13,6 @@ ENDIF(MSVC)
 
 #INCLUDE(${CMAKE_ROOT}/Modules/FindSDL.cmake)
 
-IF(CMAKE_COMPILER_IS_GNUCXX)
-add_definitions("-std=c++11")
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 add_executable(balance main.cpp scene.cpp)
 target_link_libraries(balance image ogui demo SDL2 SDL2main)

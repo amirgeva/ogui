@@ -33,7 +33,8 @@ void GridLayout::arrange(Widget* widget)
   Point sp=widget->get_layout_spacing();
   float sum_weights = std::accumulate(m_Weights.begin(), m_Weights.end(), 0.0f);
   Rect r=widget->get_children_clip_region();
-  int maxh=0,y=r.top,x=r.left,c=0;
+  int maxh=0,y=r.top,x=r.left;
+  unsigned c=0;
   int total_width = r.get_width();
   //int dx=r.get_width()/m_Columns;
   for(auto& w : *widget) maxh=Max(maxh,w->get_minimum_size().y);

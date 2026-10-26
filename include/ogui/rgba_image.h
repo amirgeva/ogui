@@ -86,10 +86,10 @@ class Image
 public:
   /** Construct an empty image */
   Image() 
-  : m_Width(0)
+  : m_ExternalData(0)
+  , m_Width(0)
   , m_Height(0)
-  , m_ExternalData(0)
-  , m_Modified(false) 
+  , m_Modified(false)
   {}
 
   /** Construct an image of the given size */

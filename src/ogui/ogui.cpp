@@ -179,7 +179,6 @@ bool StaticWidget::draw(Image& target, const Rect& region)
   arrange_layout();
   if (!valid())
   {
-    Rect desktop_rect=to_desktop(get_rect());
     redraw();
     validate();
     Rect children_local_region=local_region;

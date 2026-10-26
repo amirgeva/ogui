@@ -92,15 +92,15 @@ private:
 
 protected:
   Widget() 
-  : m_Enabled(true)
+  : m_Parent(0)
+  , m_Name(generate_unique_name())
+  , m_Enabled(true)
   , m_Valid(false)
   , m_ForceMofified(false)
-  , m_Parent(0)
-  , m_Name(generate_unique_name()) 
   , m_LayoutPreference(LAYOUT_EXPAND,LAYOUT_EXPAND)
-  , m_LayoutWeight(1.0f)
   , m_LayoutMargin(0,0)
   , m_LayoutSpacing(0,0)
+  , m_LayoutWeight(1.0f)
   , m_Alignment(ALIGN_CENTER)
   {}
 

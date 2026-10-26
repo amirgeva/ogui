@@ -102,7 +102,7 @@ public:
 void Font::draw(Image& target, const Point& offset, const xstring& text, unsigned color) const
 {
   placement_vec placement;
-  unsigned w=create_placement(text,placement);
+  create_placement(text,placement);
   for(auto& pos : placement)
   {
     Point p=pos.first+offset;

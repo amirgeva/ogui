@@ -10,7 +10,6 @@ void load_imagemap_layout();
 void load_demo_layout()
 {
   widget_ptr desktop=OGUIManager::instance()->get_desktop();
-  Point desk_size=desktop->get_rect().get_size();
 
   fill_widget_ptr background = FillWidget::create();
   background->set_rect(desktop->get_rect());
