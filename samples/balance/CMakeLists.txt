@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16)
 include_directories(../../include)
 IF(MSVC)
 add_definitions( "/wd4005 /wd4996 /nologo" )

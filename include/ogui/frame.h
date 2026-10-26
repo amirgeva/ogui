@@ -26,6 +26,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef H_OGUI_FRAME
 #define H_OGUI_FRAME
 
+#include <cmath>
 #include <ogui/ogui.h>
 
 namespace OGUI {
